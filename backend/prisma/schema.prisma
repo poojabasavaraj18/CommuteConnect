@@ -1,66 +1,53 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
 
+model User {
+  id        String     @id @default(uuid())
+  name      String
+  email     String     @unique
+  password  String
+  isActive  Boolean    @default(true)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  interests Interest[]
+  posts     Post[]
+}
+
+model Post {
+  id             String     @id @default(uuid())
+  origin         String
+  destination    String
+  travelDate     DateTime
+  travelTime     String
+  availableSeats Int
+  notes          String?
+  status         PostStatus @default(ACTIVE)
+  ownerId        String
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+  interests      Interest[]
+  owner          User       @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+}
+
+model Interest {
+  id        String   @id @default(uuid())
+  userId    String
+  postId    String
+  createdAt DateTime @default(now())
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, postId])
 }
 
 enum PostStatus {
   ACTIVE
   COMPLETED
   CANCELLED
-}
-
-model User {
-  id         String      @id @default(uuid())
-  name       String
-  email      String      @unique
-  password   String
-  isActive   Boolean     @default(true)
-
-  posts      Post[]
-  interests  Interest[]
-
-  createdAt  DateTime    @default(now())
-  updatedAt  DateTime    @updatedAt
-}
-model Post {
-  id           String   @id @default(uuid())
-  origin       String
-  destination  String
-  travelDate   DateTime
-  travelTime   String
-  availableSeats   Int
-  notes        String?
-  status       PostStatus   @default(ACTIVE)
-
-  ownerId      String
-  owner        User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-
-  interests    Interest[]
-
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-}
-
-model Interest {
-  id        String   @id @default(uuid())
-
-  userId    String
-  postId    String
-
-  user       User    @relation(fields: [userId], references: [id],  onDelete: Cascade)
-  post       Post    @relation(fields: [postId], references: [id],   onDelete: Cascade)
-
-  createdAt DateTime @default(now())
-
-  @@unique([userId, postId])
 }
