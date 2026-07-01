@@ -14,6 +14,9 @@ import { JwtGuard } from '../auth/jwt/jwt.guard';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { PostsService } from './posts.service';
+import { Query } from '@nestjs/common';
+import { GetPostsQueryDto } from './dto/get-posts-query.dto/get-posts-query.dto';
+import { UpdatePostStatusDto } from './dto/update-post-status.dto/update-post-status.dto';
 
 @Controller('posts')
 export class PostsController {
@@ -36,8 +39,8 @@ export class PostsController {
 
   // Get all commute posts
   @Get()
-  findAll() {
-    return this.postsService.findAll();
+  findAll(@Query() query: GetPostsQueryDto) {
+  return this.postsService.findAll(query);
   }
 
   // Get logged-in user's posts
@@ -64,6 +67,19 @@ export class PostsController {
     );
   }
 
+@UseGuards(JwtGuard)
+@Patch(':id/status')
+updateStatus(
+  @Param('id') id: string,
+  @Body() dto: UpdatePostStatusDto,
+  @Request() req,
+) {
+  return this.postsService.updateStatus(
+    id,
+    req.user.userId,
+    dto,
+  );
+}  
   // Delete a commute post
   @UseGuards(JwtGuard)
   @Delete(':id')
