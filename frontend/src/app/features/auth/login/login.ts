@@ -56,14 +56,25 @@ export class Login {
 
   }).subscribe({
 
+    // next: (res) => {
+
+    //   this.authService.saveToken(res.access_token);
+
+    //   this.router.navigate(['/dashboard']);
+
+    // },
+     
     next: (res) => {
 
-      this.authService.saveToken(res.access_token);
+  console.log('Login Response:', res);
 
-      this.router.navigate(['/dashboard']);
+  this.authService.saveToken(res.access_token);
 
-    },
+  console.log('Stored Token:', localStorage.getItem('token'));
 
+  this.router.navigate(['/dashboard']);
+
+},
     error: (err) => {
 
       this.errorMessage =

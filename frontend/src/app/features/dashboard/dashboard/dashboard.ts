@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DashboardService } from '../../../core/services/dashboard.service';
 
@@ -12,6 +12,7 @@ import { DashboardService } from '../../../core/services/dashboard.service';
 export class Dashboard implements OnInit {
 
   private dashboardService = inject(DashboardService);
+  private cdr = inject(ChangeDetectorRef);
 
   dashboard: any = null;
 
@@ -21,19 +22,21 @@ export class Dashboard implements OnInit {
 
     console.log('Dashboard Loaded');
 
+    this.loading = true;
+
     this.dashboardService.getDashboard().subscribe({
 
       next: (res) => {
 
         console.log('Dashboard Response:', res);
 
-        this.dashboard = res;
-
-        console.log('Dashboard Variable:', this.dashboard);
+        this.dashboard = { ...res };
 
         this.loading = false;
 
         console.log('Loading:', this.loading);
+
+        this.cdr.detectChanges();
 
       },
 
@@ -43,16 +46,11 @@ export class Dashboard implements OnInit {
 
         this.loading = false;
 
-      },
-
-      complete: () => {
-
-        console.log('Dashboard Request Completed');
+        this.cdr.detectChanges();
 
       }
 
     });
 
   }
-
 }

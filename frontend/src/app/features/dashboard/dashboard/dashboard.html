@@ -1,67 +1,18 @@
-<div class="dashboard" *ngIf="!loading && dashboard">
-
-  <div class="welcome-card">
-
-    <h1>👋 Hello {{ dashboard.user.name }}</h1>
-
-    <p>Welcome back to CommuteConnect</p>
-
-    <small>{{ dashboard.user.email }}</small>
-
-  </div>
-
-  <div class="stats">
-
-    <div class="card">
-      <h2>{{ dashboard.stats.totalPosts }}</h2>
-      <p>Total Posts</p>
-    </div>
-
-    <div class="card">
-      <h2>{{ dashboard.stats.activePosts }}</h2>
-      <p>Active Posts</p>
-    </div>
-
-    <div class="card">
-      <h2>{{ dashboard.stats.interestsSent }}</h2>
-      <p>Interests Sent</p>
-    </div>
-
-    <div class="card">
-      <h2>{{ dashboard.stats.interestsReceived }}</h2>
-      <p>Interests Received</p>
-    </div>
-
-  </div>
-
-  <div class="section">
-
-    <h2>🚗 Recent Ride Posts</h2>
-
-    <p *ngIf="dashboard.recentPosts.length === 0">
-
-      No rides posted yet.
-
-    </p>
-
-  </div>
-
-  <div class="section">
-
-    <h2>❤️ Recent Interests</h2>
-
-    <p *ngIf="dashboard.recentReceivedInterests.length === 0">
-
-      No interests received yet.
-
-    </p>
-
-  </div>
-
+<div *ngIf="loading">
+  <h2>Loading Dashboard...</h2>
 </div>
 
-<div *ngIf="loading">
+<div *ngIf="!loading">
 
-  <h2>Loading Dashboard...</h2>
+  <h1>Hello {{ dashboard?.user?.name }}</h1>
+
+  <p>{{ dashboard?.user?.email }}</p>
+
+  <hr>
+
+  <p>Total Posts: {{ dashboard?.stats?.totalPosts }}</p>
+  <p>Active Posts: {{ dashboard?.stats?.activePosts }}</p>
+  <p>Interests Sent: {{ dashboard?.stats?.interestsSent }}</p>
+  <p>Interests Received: {{ dashboard?.stats?.interestsReceived }}</p>
 
 </div>
