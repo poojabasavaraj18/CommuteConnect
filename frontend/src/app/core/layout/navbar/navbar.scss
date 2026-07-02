@@ -1,0 +1,125 @@
+.navbar {
+
+    height: 72px;
+
+    background: #ffffff;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    padding: 0 40px;
+
+    border-bottom: 1px solid #e5e7eb;
+
+    position: sticky;
+
+    top: 0;
+
+    z-index: 1000;
+
+    box-shadow: 0 2px 12px rgba(15,23,42,.04);
+
+}
+
+.logo {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    cursor: pointer;
+
+}
+
+.logo mat-icon {
+
+    color: #2563eb;
+
+    font-size: 32px;
+
+    width: 32px;
+
+    height: 32px;
+
+}
+
+.logo span {
+
+    font-size: 28px;
+
+    font-weight: 700;
+
+    color: #111827;
+
+}
+
+.menu {
+
+    display: flex;
+
+    gap: 36px;
+
+}
+
+.menu a {
+
+    text-decoration: none;
+
+    color: #6b7280;
+
+    font-size: 15px;
+
+    font-weight: 500;
+
+    padding-bottom: 8px;
+
+    transition: .25s;
+
+}
+
+.menu a:hover {
+
+    color: #2563eb;
+
+}
+
+.menu a.active {
+
+    color: #2563eb;
+
+    border-bottom: 3px solid #2563eb;
+
+}
+
+.logout-btn {
+
+    border-radius: 10px;
+
+    padding: 22px 24px;
+
+}
+
+@media(max-width:900px){
+
+    .menu{
+
+        gap:18px;
+
+    }
+
+}
+
+@media(max-width:768px){
+
+    .menu{
+
+        display:none;
+
+    }
+
+}

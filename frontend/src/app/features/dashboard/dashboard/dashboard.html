@@ -1,18 +1,127 @@
-<div *ngIf="loading">
-  <h2>Loading Dashboard...</h2>
+<div *ngIf="loading" class="loading-container">
+
+  <mat-spinner diameter="50"></mat-spinner>
+
+  <p>Loading dashboard...</p>
+
 </div>
 
-<div *ngIf="!loading">
+<div *ngIf="!loading" class="dashboard">
 
-  <h1>Hello {{ dashboard?.user?.name }}</h1>
+  <!-- Header -->
 
-  <p>{{ dashboard?.user?.email }}</p>
+  <section class="header-card">
 
-  <hr>
+    <div>
 
-  <p>Total Posts: {{ dashboard?.stats?.totalPosts }}</p>
-  <p>Active Posts: {{ dashboard?.stats?.activePosts }}</p>
-  <p>Interests Sent: {{ dashboard?.stats?.interestsSent }}</p>
-  <p>Interests Received: {{ dashboard?.stats?.interestsReceived }}</p>
+      <p class="page-title">Dashboard</p>
+
+      <h1>{{ dashboard?.user?.name }}</h1>
+
+      <p class="email">
+
+        {{ dashboard?.user?.email }}
+
+      </p>
+
+      <p class="subtitle">
+
+        Manage your rides, monitor requests and stay connected with your commuting network.
+
+      </p>
+
+    </div>
+
+  </section>
+
+  <!-- Statistics -->
+
+  <section class="stats-grid">
+
+    <mat-card class="stat-card">
+
+      <mat-icon>directions_car</mat-icon>
+
+      <span>Total Rides</span>
+
+      <h2>{{ dashboard?.stats?.totalPosts }}</h2>
+
+    </mat-card>
+
+    <mat-card class="stat-card">
+
+      <mat-icon>check_circle</mat-icon>
+
+      <span>Active Rides</span>
+
+      <h2>{{ dashboard?.stats?.activePosts }}</h2>
+
+    </mat-card>
+
+    <mat-card class="stat-card">
+
+      <mat-icon>favorite</mat-icon>
+
+      <span>Interests Sent</span>
+
+      <h2>{{ dashboard?.stats?.interestsSent }}</h2>
+
+    </mat-card>
+
+    <mat-card class="stat-card">
+
+      <mat-icon>mail</mat-icon>
+
+      <span>Requests</span>
+
+      <h2>{{ dashboard?.stats?.interestsReceived }}</h2>
+
+    </mat-card>
+
+  </section>
+
+  <!-- Recent Ride Posts -->
+
+  <mat-card class="content-card">
+
+    <div class="card-header">
+
+      <h2>Recent Ride Posts</h2>
+
+    </div>
+
+    <div
+      *ngIf="dashboard?.recentPosts?.length === 0"
+      class="empty-state">
+
+      <mat-icon>directions_car</mat-icon>
+
+      <p>No ride posts yet.</p>
+
+    </div>
+
+  </mat-card>
+
+  <!-- Recent Interests -->
+
+  <mat-card class="content-card">
+
+    <div class="card-header">
+
+      <h2>Recent Interest Requests</h2>
+
+    </div>
+
+    <div
+      *ngIf="dashboard?.recentReceivedInterests?.length === 0"
+      class="empty-state">
+
+      <mat-icon>mail_outline</mat-icon>
+
+      <p>No requests received.</p>
+
+    </div>
+
+  </mat-card>
 
 </div>
