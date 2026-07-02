@@ -1,5 +1,5 @@
 
-import { Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -17,6 +17,7 @@ import { Pagination } from '../../../core/models/pagination';
 
 import { CreatePost } from '../create-post/create-post';
 import { PostsService } from '../../../core/services/postservice';
+// import { ChangeDetectorRef, inject } from '@angular/core';
 
 @Component({
   selector: 'app-post-feed',
@@ -39,6 +40,7 @@ import { PostsService } from '../../../core/services/postservice';
 export class PostFeed implements OnInit {
 
   private postsService = inject(PostsService);
+  private cdr = inject(ChangeDetectorRef);
 
   private dialog = inject(MatDialog);
 
@@ -74,8 +76,6 @@ selectTab(tab: 'feed' | 'myPosts') {
   }
 loadPosts() {
 
-  console.log('Loading started');
-
   this.loading = true;
 
   this.postsService.getPosts(
@@ -89,32 +89,29 @@ loadPosts() {
 
     next: (response) => {
 
-      console.log('Response:', response);
-
-      this.posts = response.data;
+      this.posts = [...response.data];
 
       this.pagination = response.pagination;
 
       this.loading = false;
 
-      console.log('Loading ended:', this.loading);
-
-      console.log('Posts:', this.posts);
+      this.cdr.detectChanges();
 
     },
 
     error: (err) => {
 
-      console.error(err);
+      console.log(err);
 
       this.loading = false;
+
+      this.cdr.detectChanges();
 
     }
 
   });
 
 }
-
   openCreatePost() {
 
     const dialogRef = this.dialog.open(CreatePost, {
