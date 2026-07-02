@@ -1,7 +1,7 @@
-<div class="dashboard">
-  <h1>🎉 Welcome to CommuteConnect</h1>
+<h1>Dashboard</h1>
 
-  <p>Login Successful!</p>
-
-  <p>Backend Connected Successfully 🚀</p>
-</div>
+@if (dashboard) {
+  <pre>{{ dashboard | json }}</pre>
+} @else {
+  <p>Loading dashboard...</p>
+}
