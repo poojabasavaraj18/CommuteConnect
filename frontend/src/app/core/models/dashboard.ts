@@ -1,6 +1,7 @@
 import { User } from './user';
 
 export interface Dashboard {
+
   user: User;
 
   stats: {
@@ -13,4 +14,5 @@ export interface Dashboard {
   recentPosts: any[];
 
   recentReceivedInterests: any[];
+
 }
