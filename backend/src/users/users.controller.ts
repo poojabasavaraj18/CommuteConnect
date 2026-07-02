@@ -9,8 +9,9 @@ import {
 import { UsersService } from './users.service';
 import { JwtGuard } from '../auth/jwt/jwt.guard';
 import { UpdateProfileDto } from './dto/update-profile.dto/update-profile.dto';
-
-
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+@ApiTags('Users')
+@ApiBearerAuth('JWT-auth')
 @Controller()
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}

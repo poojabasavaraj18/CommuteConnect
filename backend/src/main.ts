@@ -8,6 +8,14 @@ import { HttpExceptionFilter } from './common/filters/http-exception/http-except
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  // ✅ Enable CORS
+  app.enableCors({
+    origin: 'http://localhost:4200',
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  });
+
   // Global Exception Filter
   app.useGlobalFilters(new HttpExceptionFilter());
 
@@ -25,7 +33,14 @@ async function bootstrap() {
     .setTitle('CommuteConnect API')
     .setDescription('Backend API Documentation')
     .setVersion('1.0')
-    .addBearerAuth()
+    .addBearerAuth(
+  {
+    type: 'http',
+    scheme: 'bearer',
+    bearerFormat: 'JWT',
+  },
+  'JWT-auth',
+)
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
