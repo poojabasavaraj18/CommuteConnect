@@ -1,0 +1,303 @@
+
+
+<div class="posts-page">
+
+  <!-- Header -->
+  <div class="page-header">
+
+    <div>
+      <h1>Posts</h1>
+      <p>Browse and discover commute posts shared by the community.</p>
+    </div>
+
+    <button
+      mat-raised-button
+      color="primary"
+      class="create-btn"
+      (click)="openCreatePost()">
+
+      <mat-icon>add</mat-icon>
+      Create Post
+
+    </button>
+
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+
+    <button
+      class="tab"
+      [class.active]="selectedTab === 'feed'"
+      (click)="selectTab('feed')">
+
+      Feed
+
+    </button>
+
+    <button
+      class="tab"
+      [class.active]="selectedTab === 'myPosts'"
+      (click)="selectTab('myPosts')">
+
+      My Posts
+
+    </button>
+
+  </div>
+
+  <!-- ================= FEED ================= -->
+
+  <ng-container *ngIf="selectedTab === 'feed'">
+
+    <!-- Filters -->
+    <mat-card class="filter-card">
+
+      <div class="filters">
+
+        <mat-form-field appearance="outline">
+
+          <mat-label>Origin</mat-label>
+
+          <input
+            matInput
+            [(ngModel)]="origin">
+
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+
+          <mat-label>Destination</mat-label>
+
+          <input
+            matInput
+            [(ngModel)]="destination">
+
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+
+          <mat-label>Status</mat-label>
+
+          <mat-select [(ngModel)]="status">
+
+            <mat-option value="">All</mat-option>
+            <mat-option value="ACTIVE">Active</mat-option>
+            <mat-option value="COMPLETED">Completed</mat-option>
+
+          </mat-select>
+
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+
+          <mat-label>Date</mat-label>
+
+          <input
+            matInput
+            type="date"
+            [(ngModel)]="travelDate">
+
+        </mat-form-field>
+
+      </div>
+
+      <div class="filter-buttons">
+
+        <button
+          mat-flat-button
+          color="primary"
+          (click)="search()">
+
+          Search
+
+        </button>
+
+        <button
+          mat-stroked-button
+          (click)="reset()">
+
+          Reset
+
+        </button>
+
+      </div>
+
+    </mat-card>
+
+    <!-- Loading -->
+
+    <div
+      class="loading"
+      *ngIf="loading">
+
+      <mat-spinner diameter="50"></mat-spinner>
+
+    </div>
+
+    <!-- Feed -->
+
+    <ng-container *ngIf="!loading">
+
+      <div
+        class="empty-state"
+        *ngIf="posts.length === 0">
+
+        <mat-icon>directions_car</mat-icon>
+
+        <h2>No Posts Found</h2>
+
+        <p>No commute posts available.</p>
+
+      </div>
+
+      <div
+        class="posts-grid"
+        *ngIf="posts.length > 0">
+
+        <mat-card
+          class="post-card"
+          *ngFor="let post of posts">
+
+          <div class="card-header">
+
+            <h2>
+
+              {{ post.origin }}
+
+              <mat-icon>arrow_forward</mat-icon>
+
+              {{ post.destination }}
+
+            </h2>
+
+            <span
+              class="status"
+              [class.completed]="post.status === 'COMPLETED'"
+              [class.open]="post.status === 'ACTIVE'">
+
+              {{ post.status }}
+
+            </span>
+
+          </div>
+
+          <div class="card-body">
+
+            <div class="info">
+
+              <mat-icon>person</mat-icon>
+
+              {{ post.owner.name }}
+
+            </div>
+
+            <div class="info">
+
+              <mat-icon>calendar_today</mat-icon>
+
+              {{ post.travelDate | date:'dd MMM yyyy' }}
+
+            </div>
+
+            <div class="info">
+
+              <mat-icon>schedule</mat-icon>
+
+              {{ post.travelTime }}
+
+            </div>
+
+            <div class="info">
+
+              <mat-icon>airline_seat_recline_normal</mat-icon>
+
+              {{ post.availableSeats }} Seats
+
+            </div>
+
+          </div>
+
+          <div
+            class="notes"
+            *ngIf="post.notes">
+
+            {{ post.notes }}
+
+          </div>
+
+          <div class="actions">
+
+            <button
+              mat-stroked-button
+              color="primary">
+
+              View Details
+
+            </button>
+
+            <button
+              mat-raised-button
+              color="primary">
+
+              Express Interest
+
+            </button>
+
+          </div>
+
+        </mat-card>
+
+      </div>
+
+      <div
+        class="pagination"
+        *ngIf="pagination">
+
+        <button
+          mat-stroked-button
+          (click)="previousPage()"
+          [disabled]="!pagination.hasPreviousPage">
+
+          Previous
+
+        </button>
+
+        <span>
+
+          Page {{ pagination.page }} of {{ pagination.totalPages }}
+
+        </span>
+
+        <button
+          mat-stroked-button
+          (click)="nextPage()"
+          [disabled]="!pagination.hasNextPage">
+
+          Next
+
+        </button>
+
+      </div>
+
+    </ng-container>
+
+  </ng-container>
+
+  <!-- ================= MY POSTS ================= -->
+
+  <ng-container *ngIf="selectedTab === 'myPosts'">
+
+    <div class="empty-state">
+
+      <mat-icon>directions_car</mat-icon>
+
+      <h2>My Posts</h2>
+
+      <p>We'll build this next.</p>
+
+    </div>
+
+  </ng-container>
+
+</div>
