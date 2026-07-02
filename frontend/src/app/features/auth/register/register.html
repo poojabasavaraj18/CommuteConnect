@@ -1,0 +1,44 @@
+<div class="container">
+
+  <div class="card">
+
+    <h1>🚗 CommuteConnect</h1>
+
+    <h3>Create Account</h3>
+
+    <input
+      type="text"
+      placeholder="Full Name"
+      [(ngModel)]="name">
+
+    <input
+      type="email"
+      placeholder="Email"
+      [(ngModel)]="email">
+
+    <input
+      type="password"
+      placeholder="Password"
+      [(ngModel)]="password">
+
+    <button (click)="register()">
+      Register
+    </button>
+
+    <p class="error">
+      {{ errorMessage }}
+    </p>
+
+    <p class="bottom">
+
+      Already have an account?
+
+      <a routerLink="/login">
+        Login
+      </a>
+
+    </p>
+
+  </div>
+
+</div>
