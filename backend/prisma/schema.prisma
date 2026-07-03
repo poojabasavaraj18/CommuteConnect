@@ -36,15 +36,24 @@ model Post {
 }
 
 model Interest {
-  id        String   @id @default(uuid())
+  id        String         @id @default(uuid())
   userId    String
   postId    String
-  createdAt DateTime @default(now())
-  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
+  status    InterestStatus @default(PENDING)
+  createdAt DateTime       @default(now())
+  post      Post           @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+ 
   @@unique([userId, postId])
 }
+ 
+// 2. Add this new enum (put it near your existing PostStatus enum):
+enum InterestStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
+ 
 
 enum PostStatus {
   ACTIVE

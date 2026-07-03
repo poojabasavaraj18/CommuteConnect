@@ -1,8 +1,10 @@
 import {
+  Body,
   Controller,
   Delete,
   Get,
   Param,
+  Patch,
   Post,
   Request,
   UseGuards,
@@ -10,6 +12,8 @@ import {
 
 import { JwtGuard } from '../auth/jwt/jwt.guard';
 import { InterestsService } from './interests.service';
+import { UpdateInterestStatusDto } from './dto/update-interest-status.dto';
+// import { UpdateInterestStatusDto } from './dto/update-interest-status.dto';
 
 @Controller('interests')
 @UseGuards(JwtGuard)
@@ -40,6 +44,20 @@ export class InterestsController {
   receivedInterests(@Request() req) {
     return this.interestsService.receivedInterests(
       req.user.userId,
+    );
+  }
+
+  // Accept or reject an interest sent to one of your own rides.
+  @Patch(':id/status')
+  updateStatus(
+    @Request() req,
+    @Param('id') id: string,
+    @Body() dto: UpdateInterestStatusDto,
+  ) {
+    return this.interestsService.updateStatus(
+      id,
+      req.user.userId,
+      dto.status,
     );
   }
 
