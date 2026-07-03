@@ -1,1 +1,83 @@
-<p>profile works!</p>
+<div class="profile-page">
+
+  <div class="loading" *ngIf="loading">
+    <p>Loading profile…</p>
+  </div>
+
+  <div class="profile-content" *ngIf="!loading && profile">
+
+    <mat-card class="profile-card">
+
+      <div class="avatar-block">
+        <div class="avatar">{{ getInitials(profile.name) }}</div>
+      </div>
+
+      <div class="success" *ngIf="successMessage">
+        {{ successMessage }}
+      </div>
+
+      <div class="error" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+
+      <!-- VIEW MODE -->
+      <ng-container *ngIf="!editing">
+
+        <div class="field-row">
+          <span class="label">Name</span>
+          <span class="value">{{ profile.name }}</span>
+        </div>
+
+        <div class="field-row">
+          <span class="label">Email</span>
+          <span class="value">{{ profile.email }}</span>
+        </div>
+
+        <div class="field-row">
+          <span class="label">Member Since</span>
+          <span class="value">{{ profile.createdAt | date:'dd MMM yyyy' }}</span>
+        </div>
+
+        <div class="actions">
+
+          <button mat-stroked-button color="primary" (click)="startEditing()">
+            <mat-icon>edit</mat-icon>
+            Edit Profile
+          </button>
+
+        </div>
+
+      </ng-container>
+
+      <!-- EDIT MODE -->
+      <ng-container *ngIf="editing">
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Name</mat-label>
+          <input matInput [(ngModel)]="name">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Email</mat-label>
+          <input matInput type="email" [(ngModel)]="email">
+        </mat-form-field>
+
+        <div class="actions">
+
+          <button mat-stroked-button (click)="cancelEditing()" [disabled]="saving">
+            Cancel
+          </button>
+
+          <button mat-raised-button color="primary" (click)="saveProfile()" [disabled]="saving">
+            {{ saving ? 'Saving…' : 'Save Changes' }}
+          </button>
+
+        </div>
+
+      </ng-container>
+
+    </mat-card>
+
+  </div>
+
+</div>
