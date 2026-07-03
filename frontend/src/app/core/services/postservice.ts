@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
 import { PostsResponse } from '../models/pagination';
+import { Post } from '../models/post';
 
 @Injectable({
   providedIn: 'root',
@@ -36,12 +37,11 @@ export class PostsService {
       }
     );
   }
-
-  getMyPosts() {
-    return this.http.get(
-      `${environment.apiUrl}/posts/my`
-    );
-  }
+getMyPosts(): Observable<Post[]> {
+  return this.http.get<Post[]>(
+    `${environment.apiUrl}/posts/my`
+  );
+}
 
   createPost(post: any) {
     return this.http.post(

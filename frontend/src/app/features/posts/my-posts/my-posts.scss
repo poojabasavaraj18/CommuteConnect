@@ -1,0 +1,75 @@
+.my-posts-page {
+  padding: 32px;
+}
+
+.header {
+  margin-bottom: 24px;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 32px;
+  font-weight: 700;
+}
+
+.header p {
+  margin-top: 8px;
+  color: #666;
+}
+
+.posts-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0,0,0,.08);
+}
+
+.posts-table th {
+  background: #2563eb;
+  color: white;
+  padding: 16px;
+  text-align: left;
+}
+
+.posts-table td {
+  padding: 16px;
+  border-bottom: 1px solid #eee;
+}
+
+.posts-table tr:hover {
+  background: #f8fafc;
+}
+
+.status {
+  padding: 6px 12px;
+  border-radius: 20px;
+  background: #dcfce7;
+  color: #166534;
+  font-weight: 600;
+}
+
+button {
+  margin-right: 8px;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+button:first-child {
+  background: #2563eb;
+  color: white;
+}
+
+button:last-child {
+  background: #ef4444;
+  color: white;
+}
+
+.empty {
+  text-align: center;
+  margin-top: 80px;
+  color: #777;
+}

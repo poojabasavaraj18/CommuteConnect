@@ -1,4 +1,3 @@
-
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -17,7 +16,7 @@ import { Pagination } from '../../../core/models/pagination';
 
 import { CreatePost } from '../create-post/create-post';
 import { PostsService } from '../../../core/services/postservice';
-// import { ChangeDetectorRef, inject } from '@angular/core';
+import { MyPosts } from '../my-posts/my-posts';
 
 @Component({
   selector: 'app-post-feed',
@@ -33,6 +32,7 @@ import { PostsService } from '../../../core/services/postservice';
     MatProgressSpinnerModule,
     MatIconModule,
     MatDialogModule,
+    MyPosts,
   ],
   templateUrl: './post-feed.html',
   styleUrl: './post-feed.scss',
@@ -47,11 +47,13 @@ export class PostFeed implements OnInit {
   posts: Post[] = [];
   selectedTab: 'feed' | 'myPosts' = 'feed';
 
-selectTab(tab: 'feed' | 'myPosts') {
+  selectTab(tab: 'feed' | 'myPosts') {
+    this.selectedTab = tab;
 
-  this.selectedTab = tab;
-
-}
+    if (tab === 'feed') {
+      this.loadPosts();
+    }
+  }
 
   pagination!: Pagination;
 
@@ -74,44 +76,40 @@ selectTab(tab: 'feed' | 'myPosts') {
     this.loadPosts();
 
   }
-loadPosts() {
 
-  this.loading = true;
+  loadPosts() {
 
-  this.postsService.getPosts(
-    this.page,
-    this.limit,
-    this.origin,
-    this.destination,
-    this.status,
-    this.travelDate
-  ).subscribe({
+    this.loading = true;
 
-    next: (response) => {
+    this.postsService.getPosts(
+      this.page,
+      this.limit,
+      this.origin,
+      this.destination,
+      this.status,
+      this.travelDate
+    ).subscribe({
 
-      this.posts = [...response.data];
+      next: (response) => {
 
-      this.pagination = response.pagination;
+        this.posts = [...response.data];
+        this.pagination = response.pagination;
+        this.loading = false;
+        this.cdr.detectChanges();
 
-      this.loading = false;
+      },
 
-      this.cdr.detectChanges();
+      error: () => {
 
-    },
+        this.loading = false;
+        this.cdr.detectChanges();
 
-    error: (err) => {
+      }
 
-      console.log(err);
+    });
 
-      this.loading = false;
+  }
 
-      this.cdr.detectChanges();
-
-    }
-
-  });
-
-}
   openCreatePost() {
 
     const dialogRef = this.dialog.open(CreatePost, {
@@ -124,62 +122,41 @@ loadPosts() {
 
     dialogRef.afterClosed().subscribe(result => {
 
-      if (result) {
+      if (!result) return;
 
+      if (this.selectedTab === 'feed') {
         this.loadPosts();
-
       }
 
     });
-
   }
 
   search() {
-
     this.page = 1;
-
     this.loadPosts();
-
   }
 
   reset() {
-
     this.origin = '';
-
     this.destination = '';
-
     this.status = '';
-
     this.travelDate = '';
-
     this.page = 1;
-
     this.loadPosts();
-
   }
 
   previousPage() {
-
-    if (this.pagination.hasPreviousPage) {
-
+    if (this.pagination?.hasPreviousPage) {
       this.page--;
-
       this.loadPosts();
-
     }
-
   }
 
   nextPage() {
-
-    if (this.pagination.hasNextPage) {
-
+    if (this.pagination?.hasNextPage) {
       this.page++;
-
       this.loadPosts();
-
     }
-
   }
 
 }

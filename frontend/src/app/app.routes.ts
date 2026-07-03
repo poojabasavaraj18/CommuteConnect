@@ -12,6 +12,7 @@ import { HomeLayout } from './core/layout/home-layout/home-layout';
 import { authGuard } from './core/guards/auth-guard';
 import { PostFeed } from './features/posts/post-feed/post-feed';
 import { CreatePost } from './features/posts/create-post/create-post';
+import { MyPosts } from './features/posts/my-posts/my-posts';
 
 export const routes: Routes = [
 
@@ -46,7 +47,10 @@ export const routes: Routes = [
   path: 'posts',
   component: PostFeed
 },
-
+{
+    path: 'my-posts',
+    component: MyPosts
+},
 {
   path: 'create-post',
   component: CreatePost
