@@ -45,11 +45,11 @@ export class InterestsService {
     const interestedUser = await this.prisma.user.findUnique({
       where: { id: userId },
     });
-
-    await this.notificationsService.createNotification({
+await this.notificationsService.createNotification({
       userId: post.ownerId,
       message: `${interestedUser?.name ?? 'Someone'} is interested in your ride.`,
       type: NotificationType.INTEREST_RECEIVED,
+      referenceId: interest.id,
     });
 
     return interest;

@@ -12,15 +12,16 @@ export class NotificationsService {
 
   // Internal use only — called by InterestsService / PostsService.
   // Not exposed via any controller route.
-  async createNotification(dto: CreateNotificationDto) {
-    return this.prisma.notification.create({
-      data: {
-        userId: dto.userId,
-        message: dto.message,
-        type: dto.type,
-      },
-    });
-  }
+async createNotification(dto: CreateNotificationDto) {
+  return this.prisma.notification.create({
+    data: {
+      userId: dto.userId,
+      message: dto.message,
+      type: dto.type,
+      referenceId: dto.referenceId,
+    },
+  });
+}
 
   async findAllForUser(userId: string) {
     return this.prisma.notification.findMany({
