@@ -1,5 +1,3 @@
-
-
 <div class="posts-page">
 
   <!-- Header -->
@@ -128,6 +126,14 @@
     <!-- Loading -->
 
     <div
+      class="interest-error"
+      *ngIf="interestError">
+
+      {{ interestError }}
+
+    </div>
+
+    <div
       class="loading"
       *ngIf="loading">
 
@@ -230,7 +236,8 @@
 
             <button
               mat-stroked-button
-              color="primary">
+              color="primary"
+              (click)="viewDetails(post)">
 
               View Details
 
@@ -238,9 +245,11 @@
 
             <button
               mat-raised-button
-              color="primary">
+              color="primary"
+              [disabled]="interestedPostIds.has(post.id)"
+              (click)="expressInterest(post)">
 
-              Express Interest
+              {{ interestedPostIds.has(post.id) ? 'Interested ✓' : 'Express Interest' }}
 
             </button>
 
@@ -290,6 +299,6 @@
 
     <app-my-posts></app-my-posts>
 
-</ng-container>
+  </ng-container>
 
 </div>

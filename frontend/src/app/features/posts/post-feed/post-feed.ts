@@ -16,7 +16,9 @@ import { Pagination } from '../../../core/models/pagination';
 
 import { CreatePost } from '../create-post/create-post';
 import { PostsService } from '../../../core/services/postservice';
+import { InterestsService } from '../../../core/services/interests.service';
 import { MyPosts } from '../my-posts/my-posts';
+import { PostDetails } from '../post-details/post-details';
 
 @Component({
   selector: 'app-post-feed',
@@ -40,12 +42,20 @@ import { MyPosts } from '../my-posts/my-posts';
 export class PostFeed implements OnInit {
 
   private postsService = inject(PostsService);
+  private interestsService = inject(InterestsService);
   private cdr = inject(ChangeDetectorRef);
 
   private dialog = inject(MatDialog);
 
   posts: Post[] = [];
   selectedTab: 'feed' | 'myPosts' = 'feed';
+
+  // Tracks which posts the current user has already expressed
+  // interest in during this session, so the button can flip to
+  // a disabled "Interested" state without needing a re-fetch.
+  interestedPostIds = new Set<string>();
+
+  interestError = '';
 
   selectTab(tab: 'feed' | 'myPosts') {
     this.selectedTab = tab;
@@ -102,6 +112,44 @@ export class PostFeed implements OnInit {
       error: () => {
 
         this.loading = false;
+        this.cdr.detectChanges();
+
+      }
+
+    });
+
+  }
+
+  viewDetails(post: Post) {
+
+    this.dialog.open(PostDetails, {
+      width: '520px',
+      data: post,
+    });
+
+  }
+
+  expressInterest(post: Post) {
+
+    this.interestError = '';
+
+    this.interestsService.expressInterest(post.id).subscribe({
+
+      next: () => {
+        this.interestedPostIds.add(post.id);
+        this.cdr.detectChanges();
+      },
+
+      error: (err) => {
+
+        // If it already exists, treat it the same as success —
+        // the button should still flip to "Interested".
+        if (err.status === 400) {
+          this.interestedPostIds.add(post.id);
+        } else {
+          this.interestError = err.error?.message || 'Could not express interest';
+        }
+
         this.cdr.detectChanges();
 
       }

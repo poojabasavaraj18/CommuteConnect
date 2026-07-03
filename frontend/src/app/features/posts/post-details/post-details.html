@@ -1,1 +1,76 @@
-<p>post-details works!</p>
+<h2 mat-dialog-title>Ride Details</h2>
+
+<div mat-dialog-content class="details-content">
+
+  <div class="route">
+    <span>{{ post.origin }}</span>
+    <mat-icon>arrow_forward</mat-icon>
+    <span>{{ post.destination }}</span>
+  </div>
+
+  <span
+    class="status"
+    [class.completed]="post.status === 'COMPLETED'"
+    [class.cancelled]="post.status === 'CANCELLED'"
+    [class.active]="post.status === 'ACTIVE'">
+
+    {{ post.status }}
+
+  </span>
+
+  <div class="detail-grid">
+
+    <div class="detail-item">
+      <mat-icon>person</mat-icon>
+      <div>
+        <span class="label">Driver</span>
+        <span class="value">{{ post.owner?.name }}</span>
+      </div>
+    </div>
+
+    <div class="detail-item">
+      <mat-icon>email</mat-icon>
+      <div>
+        <span class="label">Contact</span>
+        <span class="value">{{ post.owner?.email }}</span>
+      </div>
+    </div>
+
+    <div class="detail-item">
+      <mat-icon>calendar_today</mat-icon>
+      <div>
+        <span class="label">Travel Date</span>
+        <span class="value">{{ post.travelDate | date:'dd MMM yyyy' }}</span>
+      </div>
+    </div>
+
+    <div class="detail-item">
+      <mat-icon>schedule</mat-icon>
+      <div>
+        <span class="label">Travel Time</span>
+        <span class="value">{{ post.travelTime }}</span>
+      </div>
+    </div>
+
+    <div class="detail-item">
+      <mat-icon>airline_seat_recline_normal</mat-icon>
+      <div>
+        <span class="label">Seats Left</span>
+        <span class="value">{{ post.availableSeats }}</span>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="notes-block" *ngIf="post.notes">
+    <span class="label">Notes</span>
+    <p>{{ post.notes }}</p>
+  </div>
+
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-raised-button color="primary" (click)="close()">
+    Close
+  </button>
+</div>

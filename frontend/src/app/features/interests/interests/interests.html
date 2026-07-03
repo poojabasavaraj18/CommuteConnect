@@ -1,1 +1,110 @@
-<p>interests works!</p>
+<div class="interests-page">
+
+  <div class="page-header">
+    <div>
+      <h1>Interests</h1>
+      <p>Track rides you're interested in, and see who's interested in yours.</p>
+    </div>
+  </div>
+
+  <div class="tabs">
+
+    <button
+      class="tab"
+      [class.active]="selectedTab === 'sent'"
+      (click)="selectTab('sent')">
+
+      Interests Sent
+
+    </button>
+
+    <button
+      class="tab"
+      [class.active]="selectedTab === 'received'"
+      (click)="selectTab('received')">
+
+      Interests Received
+
+    </button>
+
+  </div>
+
+  <div class="loading" *ngIf="loading">
+    <mat-spinner diameter="45"></mat-spinner>
+  </div>
+
+  <!-- ============ SENT ============ -->
+  <ng-container *ngIf="!loading && selectedTab === 'sent'">
+
+    <div class="empty-state" *ngIf="sentInterests.length === 0">
+      <mat-icon>favorite_border</mat-icon>
+      <h2>No interests sent yet</h2>
+      <p>Browse the ride feed and express interest in a ride to see it here.</p>
+    </div>
+
+    <div class="interest-list" *ngIf="sentInterests.length > 0">
+
+      <div class="interest-row" *ngFor="let item of sentInterests">
+
+        <div class="route">
+          <span>{{ item.post?.origin }}</span>
+          <mat-icon>arrow_forward</mat-icon>
+          <span>{{ item.post?.destination }}</span>
+        </div>
+
+        <div class="meta">
+          <span class="chip">{{ item.post?.travelDate | date:'dd MMM yyyy' }}</span>
+          <span class="chip">Driver: {{ item.post?.owner?.name }}</span>
+        </div>
+
+        <button
+          mat-stroked-button
+          color="warn"
+          (click)="withdraw(item.postId)">
+
+          Withdraw
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </ng-container>
+
+  <!-- ============ RECEIVED ============ -->
+  <ng-container *ngIf="!loading && selectedTab === 'received'">
+
+    <div class="empty-state" *ngIf="receivedInterests.length === 0">
+      <mat-icon>group</mat-icon>
+      <h2>No interests received yet</h2>
+      <p>When someone expresses interest in your ride, it'll show up here.</p>
+    </div>
+
+    <div class="interest-list" *ngIf="receivedInterests.length > 0">
+
+      <div class="interest-row" *ngFor="let item of receivedInterests">
+
+        <div class="requester">
+          <div class="avatar">{{ item.user?.name?.charAt(0) }}</div>
+          <div>
+            <strong>{{ item.user?.name }}</strong>
+            <span>{{ item.user?.email }}</span>
+          </div>
+        </div>
+
+        <div class="route">
+          <span>{{ item.post?.origin }}</span>
+          <mat-icon>arrow_forward</mat-icon>
+          <span>{{ item.post?.destination }}</span>
+        </div>
+
+        <span class="chip time">{{ item.createdAt | date:'shortDate' }}</span>
+
+      </div>
+
+    </div>
+
+  </ng-container>
+
+</div>
