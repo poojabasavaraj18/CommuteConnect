@@ -17,7 +17,8 @@
       <input
         matInput
         type="email"
-        [(ngModel)]="email">
+        [(ngModel)]="email"
+        [disabled]="loading">
 
     </mat-form-field>
 
@@ -27,8 +28,20 @@
 
       <input
         matInput
-        type="password"
-        [(ngModel)]="password">
+        [type]="showPassword ? 'text' : 'password'"
+        [(ngModel)]="password"
+        [disabled]="loading">
+
+      <button
+        mat-icon-button
+        matSuffix
+        type="button"
+        (click)="showPassword = !showPassword"
+        [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'">
+
+        <mat-icon>{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+
+      </button>
 
     </mat-form-field>
 
@@ -43,9 +56,16 @@
     <button
       mat-raised-button
       color="primary"
+      [disabled]="loading"
       (click)="login()">
 
-      Login
+      <mat-spinner
+        *ngIf="loading"
+        diameter="20"
+        class="btn-spinner">
+      </mat-spinner>
+
+      {{ loading ? 'Logging in…' : 'Login' }}
 
     </button>
 
