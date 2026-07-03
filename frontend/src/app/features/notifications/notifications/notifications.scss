@@ -1,0 +1,111 @@
+.notifications-page {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem;
+}
+
+.notifications-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+
+  h2 {
+    margin: 0;
+    font-size: 1.25rem;
+  }
+}
+
+.mark-all-btn {
+  background: none;
+  border: none;
+  color: #2563eb;
+  font-size: 0.85rem;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.state-message {
+  text-align: center;
+  color: #6b7280;
+  padding: 2rem 0;
+
+  &.error {
+    color: #dc2626;
+  }
+}
+
+.notifications-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.notification-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.9rem 1rem;
+  border-radius: 10px;
+  background: #f9fafb;
+  cursor: pointer;
+  transition: background 0.15s ease;
+
+  &:hover {
+    background: #f3f4f6;
+  }
+
+  &.unread {
+    background: #eff6ff;
+    border-left: 3px solid #2563eb;
+  }
+}
+
+.notification-content {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.notification-icon {
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.notification-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.notification-message {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #111827;
+  word-break: break-word;
+}
+
+.notification-time {
+  font-size: 0.75rem;
+  color: #9ca3af;
+  margin-top: 0.15rem;
+}
+
+.delete-btn {
+  background: none;
+  border: none;
+  color: #9ca3af;
+  font-size: 0.9rem;
+  cursor: pointer;
+  padding: 0.25rem 0.4rem;
+  flex-shrink: 0;
+
+  &:hover {
+    color: #dc2626;
+  }
+}

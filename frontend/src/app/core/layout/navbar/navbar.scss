@@ -123,3 +123,16 @@
     }
 
 }
+.actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.bell-btn {
+    color: #6b7280;
+
+    &:hover {
+        color: #2563eb;
+    }
+}
