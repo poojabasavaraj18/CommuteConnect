@@ -6,60 +6,73 @@ export class DashboardService {
   constructor(private readonly prisma: PrismaService) {}
 
   async getDashboard(userId: string) {
-    // Logged-in user
-    const user = await this.prisma.user.findUnique({
-      where: {
-        id: userId,
-      },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-      },
-    });
+    const start = Date.now();
 
-    // Statistics
-    const totalPosts = await this.prisma.post.count({
-      where: {
-        ownerId: userId,
-      },
-    });
+    // Run all independent queries in parallel instead of one-by-one.
+    // This cuts total wait time down to roughly the slowest single
+    // query, instead of the sum of all of them.
+    const [
+      user,
+      totalPosts,
+      activePosts,
+      interestsSent,
+      interestsReceived,
+      recentPosts,
+      recentReceivedInterests,
+    ] = await Promise.all([
+      // Logged-in user
+      this.prisma.user.findUnique({
+        where: {
+          id: userId,
+        },
+        select: {
+          id: true,
+          name: true,
+          email: true,
+        },
+      }),
 
-    const activePosts = await this.prisma.post.count({
-      where: {
-        ownerId: userId,
-        status: 'ACTIVE',
-      },
-    });
-
-    const interestsSent = await this.prisma.interest.count({
-      where: {
-        userId,
-      },
-    });
-
-    const interestsReceived = await this.prisma.interest.count({
-      where: {
-        post: {
+      // Statistics
+      this.prisma.post.count({
+        where: {
           ownerId: userId,
         },
-      },
-    });
+      }),
 
-    // Recent Posts
-    const recentPosts = await this.prisma.post.findMany({
-      where: {
-        ownerId: userId,
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
-      take: 5,
-    });
+      this.prisma.post.count({
+        where: {
+          ownerId: userId,
+          status: 'ACTIVE',
+        },
+      }),
 
-    // Recent Interests Received
-    const recentReceivedInterests =
-      await this.prisma.interest.findMany({
+      this.prisma.interest.count({
+        where: {
+          userId,
+        },
+      }),
+
+      this.prisma.interest.count({
+        where: {
+          post: {
+            ownerId: userId,
+          },
+        },
+      }),
+
+      // Recent Posts
+      this.prisma.post.findMany({
+        where: {
+          ownerId: userId,
+        },
+        orderBy: {
+          createdAt: 'desc',
+        },
+        take: 5,
+      }),
+
+      // Recent Interests Received
+      this.prisma.interest.findMany({
         where: {
           post: {
             ownerId: userId,
@@ -85,7 +98,10 @@ export class DashboardService {
           createdAt: 'desc',
         },
         take: 5,
-      });
+      }),
+    ]);
+
+    console.log(`Dashboard query took ${Date.now() - start}ms`);
 
     return {
       user,
