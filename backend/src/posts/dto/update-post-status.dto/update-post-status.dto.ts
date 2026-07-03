@@ -3,5 +3,5 @@ import { PostStatus } from '@prisma/client';
 
 export class UpdatePostStatusDto {
   @IsEnum(PostStatus)
-  status: PostStatus | undefined;
+  status!: PostStatus;
 }

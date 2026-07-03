@@ -40,15 +40,11 @@ export class PostsService {
     const where: any = {};
 
     if (origin) {
-      where.origin = {
-        contains: origin,
-      };
+      where.origin = { contains: origin };
     }
 
     if (destination) {
-      where.destination = {
-        contains: destination,
-      };
+      where.destination = { contains: destination };
     }
 
     if (status) {
@@ -60,10 +56,7 @@ export class PostsService {
       const end = new Date(travelDate);
       end.setDate(end.getDate() + 1);
 
-      where.travelDate = {
-        gte: start,
-        lt: end,
-      };
+      where.travelDate = { gte: start, lt: end };
     }
 
     const [posts, total] = await Promise.all([
@@ -73,21 +66,13 @@ export class PostsService {
         take: limit,
         include: {
           owner: {
-            select: {
-              id: true,
-              name: true,
-              email: true,
-            },
+            select: { id: true, name: true, email: true },
           },
         },
-        orderBy: {
-          createdAt: 'desc',
-        },
+        orderBy: { createdAt: 'desc' },
       }),
 
-      this.prisma.post.count({
-        where,
-      }),
+      this.prisma.post.count({ where }),
     ]);
 
     return {
@@ -105,20 +90,16 @@ export class PostsService {
 
   async findMyPosts(userId: string) {
     return this.prisma.post.findMany({
-      where: {
-        ownerId: userId,
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
+      where: { ownerId: userId },
+      orderBy: { createdAt: 'desc' },
     });
   }
 
+  // General edits: origin, destination, time, seats, notes, etc.
+  // Always fires POST_UPDATED — not tied to status changes.
   async update(userId: string, postId: string, dto: UpdatePostDto) {
     const post = await this.prisma.post.findUnique({
-      where: {
-        id: postId,
-      },
+      where: { id: postId },
     });
 
     if (!post) {
@@ -130,9 +111,7 @@ export class PostsService {
     }
 
     const updated = await this.prisma.post.update({
-      where: {
-        id: postId,
-      },
+      where: { id: postId },
       data: {
         ...dto,
         travelDate: dto.travelDate ? new Date(dto.travelDate) : undefined,
@@ -141,22 +120,22 @@ export class PostsService {
 
     await this.notifyInterestedUsers(
       postId,
-      'Ride details have been updated.',
+      `Your ride from ${post.origin} to ${post.destination} has been updated.`,
       NotificationType.POST_UPDATED,
     );
 
     return updated;
   }
 
+  // Dedicated status-only endpoint. Fires POST_COMPLETED only when
+  // the ride is explicitly marked completed.
   async updateStatus(
     postId: string,
     userId: string,
     dto: UpdatePostStatusDto,
   ) {
     const post = await this.prisma.post.findUnique({
-      where: {
-        id: postId,
-      },
+      where: { id: postId },
     });
 
     if (!post) {
@@ -168,18 +147,14 @@ export class PostsService {
     }
 
     const updated = await this.prisma.post.update({
-      where: {
-        id: postId,
-      },
-      data: {
-        status: dto.status,
-      },
+      where: { id: postId },
+      data: { status: dto.status },
     });
 
     if (dto.status === PostStatus.COMPLETED) {
       await this.notifyInterestedUsers(
         postId,
-        'Ride has been completed.',
+        `Your ride from ${post.origin} to ${post.destination} has been marked completed.`,
         NotificationType.POST_COMPLETED,
       );
     }
@@ -189,9 +164,7 @@ export class PostsService {
 
   async delete(userId: string, postId: string) {
     const post = await this.prisma.post.findUnique({
-      where: {
-        id: postId,
-      },
+      where: { id: postId },
     });
 
     if (!post) {
@@ -203,14 +176,10 @@ export class PostsService {
     }
 
     await this.prisma.post.delete({
-      where: {
-        id: postId,
-      },
+      where: { id: postId },
     });
 
-    return {
-      message: 'Post deleted successfully',
-    };
+    return { message: 'Post deleted successfully' };
   }
 
   // Notifies every user who expressed interest in this post.

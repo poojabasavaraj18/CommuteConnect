@@ -45,9 +45,10 @@ export class InterestsService {
     const interestedUser = await this.prisma.user.findUnique({
       where: { id: userId },
     });
-await this.notificationsService.createNotification({
+
+    await this.notificationsService.createNotification({
       userId: post.ownerId,
-      message: `${interestedUser?.name ?? 'Someone'} is interested in your ride.`,
+      message: `${interestedUser?.name ?? 'Someone'} is interested in your ride from ${post.origin} to ${post.destination}.`,
       type: NotificationType.INTEREST_RECEIVED,
       referenceId: interest.id,
     });
@@ -76,7 +77,10 @@ await this.notificationsService.createNotification({
   ) {
     const interest = await this.prisma.interest.findUnique({
       where: { id: interestId },
-      include: { post: true, user: true },
+      include: {
+        post: { include: { owner: true } },
+        user: true,
+      },
     });
 
     if (!interest) {
@@ -94,16 +98,19 @@ await this.notificationsService.createNotification({
       data: { status },
     });
 
+    const ownerName = interest.post.owner?.name ?? 'The ride owner';
+    const routeText = `${interest.post.origin} to ${interest.post.destination}`;
+
     if (status === InterestStatus.ACCEPTED) {
       await this.notificationsService.createNotification({
         userId: interest.userId,
-        message: 'Your interest has been accepted.',
+        message: `${ownerName} accepted your interest for the ride from ${routeText}.`,
         type: NotificationType.INTEREST_ACCEPTED,
       });
     } else if (status === InterestStatus.REJECTED) {
       await this.notificationsService.createNotification({
         userId: interest.userId,
-        message: 'Your interest has been rejected.',
+        message: `${ownerName} rejected your interest for the ride from ${routeText}.`,
         type: NotificationType.INTEREST_REJECTED,
       });
     }
