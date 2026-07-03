@@ -8,15 +8,16 @@ datasource db {
 }
 
 model User {
-  id        String     @id @default(uuid())
-  name      String
-  email     String     @unique
-  password  String
-  isActive  Boolean    @default(true)
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  interests Interest[]
-  posts     Post[]
+  id            String         @id @default(uuid())
+  name          String
+  email         String         @unique
+  password      String
+  isActive      Boolean        @default(true)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  interests     Interest[]
+  posts         Post[]
+  notifications Notification[]
 }
 
 model Post {
@@ -43,17 +44,44 @@ model Interest {
   createdAt DateTime       @default(now())
   post      Post           @relation(fields: [postId], references: [id], onDelete: Cascade)
   user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)
- 
+
   @@unique([userId, postId])
 }
- 
+
 // 2. Add this new enum (put it near your existing PostStatus enum):
 enum InterestStatus {
   PENDING
   ACCEPTED
   REJECTED
 }
- 
+
+model Notification {
+  id String @id @default(uuid())
+
+  message String
+
+  type NotificationType
+
+  isRead Boolean @default(false)
+
+  userId String
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
+
+enum NotificationType {
+  INTEREST_RECEIVED
+  INTEREST_ACCEPTED
+  INTEREST_REJECTED
+  POST_UPDATED
+  POST_COMPLETED
+}
 
 enum PostStatus {
   ACTIVE

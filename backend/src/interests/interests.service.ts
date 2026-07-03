@@ -5,17 +5,19 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-// import { InterestStatus } from '@prisma/client';
-import { InterestStatus } from '@prisma/client';
+import { InterestStatus, NotificationType } from '@prisma/client';
+import { NotificationsService } from '../notifications/notification.service';
+
 @Injectable()
 export class InterestsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly notificationsService: NotificationsService,
+  ) {}
 
   async expressInterest(userId: string, postId: string) {
     const post = await this.prisma.post.findUnique({
-      where: {
-        id: postId,
-      },
+      where: { id: postId },
     });
 
     if (!post) {
@@ -28,73 +30,53 @@ export class InterestsService {
       );
     }
 
-    const existingInterest =
-      await this.prisma.interest.findUnique({
-        where: {
-          userId_postId: {
-            userId,
-            postId,
-          },
-        },
-      });
+    const existingInterest = await this.prisma.interest.findUnique({
+      where: { userId_postId: { userId, postId } },
+    });
 
     if (existingInterest) {
-      throw new BadRequestException(
-        'Interest already exists',
-      );
+      throw new BadRequestException('Interest already exists');
     }
 
-    return this.prisma.interest.create({
-      data: {
-        userId,
-        postId,
-      },
+    const interest = await this.prisma.interest.create({
+      data: { userId, postId },
     });
+
+    const interestedUser = await this.prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    await this.notificationsService.createNotification({
+      userId: post.ownerId,
+      message: `${interestedUser?.name ?? 'Someone'} is interested in your ride.`,
+      type: NotificationType.INTEREST_RECEIVED,
+    });
+
+    return interest;
   }
 
   async myInterests(userId: string) {
     return this.prisma.interest.findMany({
-      where: {
-        userId,
-      },
-      include: {
-        post: {
-          include: {
-            owner: true,
-          },
-        },
-      },
+      where: { userId },
+      include: { post: { include: { owner: true } } },
     });
   }
 
   async receivedInterests(userId: string) {
     return this.prisma.interest.findMany({
-      where: {
-        post: {
-          ownerId: userId,
-        },
-      },
-      include: {
-        user: true,
-        post: true,
-      },
+      where: { post: { ownerId: userId } },
+      include: { user: true, post: true },
     });
   }
 
-  // Only the owner of the ride (post) can accept or reject
-  // an interest sent to it.
   async updateStatus(
     interestId: string,
     userId: string,
     status: InterestStatus,
   ) {
     const interest = await this.prisma.interest.findUnique({
-      where: {
-        id: interestId,
-      },
-      include: {
-        post: true,
-      },
+      where: { id: interestId },
+      include: { post: true, user: true },
     });
 
     if (!interest) {
@@ -107,44 +89,41 @@ export class InterestsService {
       );
     }
 
-    return this.prisma.interest.update({
-      where: {
-        id: interestId,
-      },
-      data: {
-        status,
-      },
+    const updated = await this.prisma.interest.update({
+      where: { id: interestId },
+      data: { status },
     });
+
+    if (status === InterestStatus.ACCEPTED) {
+      await this.notificationsService.createNotification({
+        userId: interest.userId,
+        message: 'Your interest has been accepted.',
+        type: NotificationType.INTEREST_ACCEPTED,
+      });
+    } else if (status === InterestStatus.REJECTED) {
+      await this.notificationsService.createNotification({
+        userId: interest.userId,
+        message: 'Your interest has been rejected.',
+        type: NotificationType.INTEREST_REJECTED,
+      });
+    }
+
+    return updated;
   }
 
   async removeInterest(userId: string, postId: string) {
-    const interest =
-      await this.prisma.interest.findUnique({
-        where: {
-          userId_postId: {
-            userId,
-            postId,
-          },
-        },
-      });
+    const interest = await this.prisma.interest.findUnique({
+      where: { userId_postId: { userId, postId } },
+    });
 
     if (!interest) {
-      throw new NotFoundException(
-        'Interest not found',
-      );
+      throw new NotFoundException('Interest not found');
     }
 
     await this.prisma.interest.delete({
-      where: {
-        userId_postId: {
-          userId,
-          postId,
-        },
-      },
+      where: { userId_postId: { userId, postId } },
     });
 
-    return {
-      message: 'Interest removed successfully',
-    };
+    return { message: 'Interest removed successfully' };
   }
 }
