@@ -1,1 +1,56 @@
-<p>edit-post works!</p>
+<h2 mat-dialog-title>Edit Ride</h2>
+
+<div mat-dialog-content class="edit-post-form">
+
+  <div class="error" *ngIf="errorMessage">
+    {{ errorMessage }}
+  </div>
+
+  <div class="form-grid">
+
+    <mat-form-field appearance="outline">
+      <mat-label>Origin</mat-label>
+      <input matInput [(ngModel)]="origin">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Destination</mat-label>
+      <input matInput [(ngModel)]="destination">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Travel Date</mat-label>
+      <input matInput type="date" [(ngModel)]="travelDate">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Travel Time</mat-label>
+      <input matInput type="time" [(ngModel)]="travelTime">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Available Seats</mat-label>
+      <input matInput type="number" min="1" [(ngModel)]="availableSeats">
+    </mat-form-field>
+
+  </div>
+
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Notes</mat-label>
+    <textarea matInput rows="3" [(ngModel)]="notes"></textarea>
+  </mat-form-field>
+
+</div>
+
+<div mat-dialog-actions align="end">
+
+  <button mat-stroked-button (click)="cancel()" [disabled]="saving">
+    Cancel
+  </button>
+
+  <button mat-raised-button color="primary" (click)="save()" [disabled]="saving">
+    <mat-icon>save</mat-icon>
+    {{ saving ? 'Saving…' : 'Save Changes' }}
+  </button>
+
+</div>
