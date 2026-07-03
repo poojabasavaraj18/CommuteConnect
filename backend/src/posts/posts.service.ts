@@ -32,61 +32,90 @@ export class PostsService {
     });
   }
 
-  async findAll(query: GetPostsQueryDto) {
-    const { page, limit, origin, destination, status, travelDate } = query;
+ async findAll(query: GetPostsQueryDto) {
+  const {
+    page = 1,
+    limit = 10,
+    origin,
+    destination,
+    status,
+    travelDate,
+  } = query;
 
-    const skip = (page - 1) * limit;
+  const skip = (page - 1) * limit;
 
-    const where: any = {};
+  const where: any = {};
 
-    if (origin) {
-      where.origin = { contains: origin };
-    }
-
-    if (destination) {
-      where.destination = { contains: destination };
-    }
-
-    if (status) {
-      where.status = status;
-    }
-
-    if (travelDate) {
-      const start = new Date(travelDate);
-      const end = new Date(travelDate);
-      end.setDate(end.getDate() + 1);
-
-      where.travelDate = { gte: start, lt: end };
-    }
-
-    const [posts, total] = await Promise.all([
-      this.prisma.post.findMany({
-        where,
-        skip,
-        take: limit,
-        include: {
-          owner: {
-            select: { id: true, name: true, email: true },
-          },
-        },
-        orderBy: { createdAt: 'desc' },
-      }),
-
-      this.prisma.post.count({ where }),
-    ]);
-
-    return {
-      data: posts,
-      pagination: {
-        total,
-        page,
-        limit,
-        totalPages: Math.ceil(total / limit),
-        hasNextPage: page * limit < total,
-        hasPreviousPage: page > 1,
-      },
+  // Origin Search (case-insensitive)
+  if (origin && origin.trim() !== '') {
+    where.origin = {
+      contains: origin.trim(),
+      mode: 'insensitive',
     };
   }
+
+  // Destination Search (case-insensitive)
+  if (destination && destination.trim() !== '') {
+    where.destination = {
+      contains: destination.trim(),
+      mode: 'insensitive',
+    };
+  }
+
+  // Status
+  if (status && status.trim() !== '') {
+    where.status = status;
+  }
+
+  // Travel Date
+  if (travelDate) {
+    const start = new Date(travelDate);
+    const end = new Date(travelDate);
+    end.setDate(end.getDate() + 1);
+
+    where.travelDate = {
+      gte: start,
+      lt: end,
+    };
+  }
+
+  const [posts, total] = await Promise.all([
+    this.prisma.post.findMany({
+      where,
+      skip,
+      take: limit,
+      include: {
+        owner: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    }),
+
+    this.prisma.post.count({
+      where,
+    }),
+  ]);
+
+  return {
+    data: posts,
+    pagination: {
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+      hasNextPage: page * limit < total,
+      hasPreviousPage: page > 1,
+    },
+  };
+}
+    
 
   async findMyPosts(userId: string) {
     return this.prisma.post.findMany({
