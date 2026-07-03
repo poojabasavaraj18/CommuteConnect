@@ -10,5 +10,6 @@ export interface Notification {
   message: string;
   type: NotificationType;
   isRead: boolean;
+  referenceId?: string;
   createdAt: string;
 }

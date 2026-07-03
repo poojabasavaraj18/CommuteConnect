@@ -2,6 +2,7 @@ import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { NotificationService } from '../../../core/services/notification.service';
+import { InterestsService } from '../../../core/services/interests.service';
 import { Notification } from '../../../core/models/notification';
 
 @Component({
@@ -13,14 +14,16 @@ import { Notification } from '../../../core/models/notification';
 export class Notifications implements OnInit {
 
   private notificationService = inject(NotificationService);
+  private interestsService = inject(InterestsService);
   private cdr = inject(ChangeDetectorRef);
 
   notifications: Notification[] = [];
   loading = true;
   error = '';
+  actionInProgress: Record<string, boolean> = {};
+  actionedIds = new Set<string>(); // hides buttons after accept/reject
 
   ngOnInit(): void {
-    console.log('Notifications component initialized');
     this.loadNotifications();
   }
 
@@ -28,7 +31,6 @@ export class Notifications implements OnInit {
     this.loading = true;
     this.notificationService.getNotifications().subscribe({
       next: (data) => {
-        console.log('Data received in component:', data);
         this.notifications = data;
         this.loading = false;
         this.cdr.detectChanges();
@@ -72,6 +74,43 @@ export class Notifications implements OnInit {
         this.cdr.detectChanges();
       },
     });
+  }
+
+  // Accept/Reject directly from the notification card.
+  respondToInterest(
+    notification: Notification,
+    status: 'ACCEPTED' | 'REJECTED',
+    event: Event,
+  ): void {
+    event.stopPropagation();
+
+    if (!notification.referenceId) return;
+
+    this.actionInProgress[notification.id] = true;
+
+    this.interestsService
+      .updateStatus(notification.referenceId, status)
+      .subscribe({
+        next: () => {
+          this.actionedIds.add(notification.id);
+          notification.isRead = true;
+          this.actionInProgress[notification.id] = false;
+          this.cdr.detectChanges();
+        },
+        error: () => {
+          this.actionInProgress[notification.id] = false;
+          this.error = 'Could not update the interest. Try again.';
+          this.cdr.detectChanges();
+        },
+      });
+  }
+
+  showActionButtons(notification: Notification): boolean {
+    return (
+      notification.type === 'INTEREST_RECEIVED' &&
+      !!notification.referenceId &&
+      !this.actionedIds.has(notification.id)
+    );
   }
 
   get unreadCount(): number {

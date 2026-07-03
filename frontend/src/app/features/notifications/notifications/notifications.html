@@ -1,4 +1,3 @@
-
 <div class="notifications-page">
   <div class="notifications-header">
     <h2>🔔 Notifications</h2>
@@ -30,6 +29,30 @@
         <div class="notification-text">
           <p class="notification-message">{{ notification.message }}</p>
           <span class="notification-time">{{ timeAgo(notification.createdAt) }}</span>
+
+          <div class="action-row" *ngIf="showActionButtons(notification)">
+            <button
+              class="accept-btn"
+              [disabled]="actionInProgress[notification.id]"
+              (click)="respondToInterest(notification, 'ACCEPTED', $event)"
+            >
+              Accept
+            </button>
+            <button
+              class="reject-btn"
+              [disabled]="actionInProgress[notification.id]"
+              (click)="respondToInterest(notification, 'REJECTED', $event)"
+            >
+              Reject
+            </button>
+          </div>
+
+          <span
+            class="resolved-tag"
+            *ngIf="actionedIds.has(notification.id)"
+          >
+            Responded ✓
+          </span>
         </div>
       </div>
       <button
