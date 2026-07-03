@@ -1,7 +1,4 @@
-import { Service } from '@angular/core';
-
-@Service()
-export class Interests {}import { Injectable, inject } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
@@ -30,6 +27,13 @@ export class InterestsService {
   receivedInterests(): Observable<any[]> {
     return this.http.get<any[]>(
       `${environment.apiUrl}/interests/received`
+    );
+  }
+
+  updateStatus(interestId: string, status: 'ACCEPTED' | 'REJECTED'): Observable<any> {
+    return this.http.patch(
+      `${environment.apiUrl}/interests/${interestId}/status`,
+      { status }
     );
   }
 

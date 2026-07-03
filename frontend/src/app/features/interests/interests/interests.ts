@@ -116,4 +116,31 @@ export class Interests implements OnInit {
 
   }
 
+  accept(item: any) {
+    this.respond(item, 'ACCEPTED');
+  }
+
+  reject(item: any) {
+    this.respond(item, 'REJECTED');
+  }
+
+  private respond(item: any, status: 'ACCEPTED' | 'REJECTED') {
+
+    this.interestsService.updateStatus(item.id, status).subscribe({
+
+      next: (updated) => {
+        // Update the item in place rather than re-fetching,
+        // so the list doesn't jump/reload for a small change.
+        item.status = updated.status;
+        this.cdr.detectChanges();
+      },
+
+      error: (err) => {
+        console.error(err);
+      }
+
+    });
+
+  }
+
 }

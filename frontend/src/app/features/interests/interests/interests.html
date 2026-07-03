@@ -57,6 +57,16 @@
           <span class="chip">Driver: {{ item.post?.owner?.name }}</span>
         </div>
 
+        <span
+          class="status-badge"
+          [class.pending]="item.status === 'PENDING'"
+          [class.accepted]="item.status === 'ACCEPTED'"
+          [class.rejected]="item.status === 'REJECTED'">
+
+          {{ item.status }}
+
+        </span>
+
         <button
           mat-stroked-button
           color="warn"
@@ -100,6 +110,38 @@
         </div>
 
         <span class="chip time">{{ item.createdAt | date:'shortDate' }}</span>
+
+        <span
+          class="status-badge"
+          [class.pending]="item.status === 'PENDING'"
+          [class.accepted]="item.status === 'ACCEPTED'"
+          [class.rejected]="item.status === 'REJECTED'">
+
+          {{ item.status }}
+
+        </span>
+
+        <div class="respond-actions" *ngIf="item.status === 'PENDING'">
+
+          <button
+            mat-stroked-button
+            color="warn"
+            (click)="reject(item)">
+
+            Reject
+
+          </button>
+
+          <button
+            mat-raised-button
+            color="primary"
+            (click)="accept(item)">
+
+            Accept
+
+          </button>
+
+        </div>
 
       </div>
 

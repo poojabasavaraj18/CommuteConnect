@@ -157,6 +157,34 @@
   }
 }
 
+.status-badge {
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: capitalize;
+
+  &.pending {
+    background: #fef9c3;
+    color: #a16207;
+  }
+
+  &.accepted {
+    background: #dcfce7;
+    color: #15803d;
+  }
+
+  &.rejected {
+    background: #fee2e2;
+    color: #b91c1c;
+  }
+}
+
+.respond-actions {
+  display: flex;
+  gap: 10px;
+}
+
 @media (max-width: 700px) {
   .interest-row {
     flex-direction: column;
