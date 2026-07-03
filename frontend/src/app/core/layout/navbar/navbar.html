@@ -1,4 +1,4 @@
-<mat-toolbar class="navbar">
+<!-- <mat-toolbar class="navbar">
 
     <div class="logo" routerLink="/dashboard">
         <mat-icon>directions_car</mat-icon>
@@ -49,6 +49,67 @@
             class="logout-btn"
             (click)="logout()">
             Logout
+        </button>
+
+    </div>
+
+</mat-toolbar> -->
+<mat-toolbar class="navbar">
+
+    <div class="logo" routerLink="/dashboard">
+        <mat-icon>directions_car</mat-icon>
+        <span>CommuteConnect</span>
+    </div>
+
+    <div class="menu">
+
+        <a routerLink="/dashboard" routerLinkActive="active">
+            <mat-icon>home</mat-icon>
+            <span>Dashboard</span>
+        </a>
+
+        <a routerLink="/posts" routerLinkActive="active">
+            <mat-icon>directions_car</mat-icon>
+            <span>All Rides</span>
+        </a>
+
+        <a routerLink="/my-posts" routerLinkActive="active">
+            <mat-icon>list_alt</mat-icon>
+            <span>My Rides</span>
+        </a>
+
+        <a routerLink="/interests" routerLinkActive="active">
+            <mat-icon>favorite</mat-icon>
+            <span>Interests</span>
+        </a>
+
+        <a routerLink="/profile" routerLinkActive="active">
+            <mat-icon>person</mat-icon>
+            <span>Profile</span>
+        </a>
+
+        <a routerLink="/notifications" routerLinkActive="active">
+            <mat-icon
+                [matBadge]="unreadCount"
+                [matBadgeHidden]="unreadCount === 0"
+                matBadgeColor="warn"
+                matBadgeSize="small">
+                notifications
+            </mat-icon>
+            <span>Notifications</span>
+        </a>
+
+    </div>
+
+    <div class="actions">
+
+        <button
+            mat-flat-button
+            color="primary"
+            class="logout-btn"
+            (click)="logout()">
+            <!-- <mat-icon>logout</mat-icon> -->
+            <span>Logout</span>
         </button>
 
     </div>

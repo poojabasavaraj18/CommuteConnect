@@ -1,304 +1,332 @@
+
 <div class="posts-page">
 
-  <!-- Header -->
-  <div class="page-header">
-
-    <div>
-      <h1>Posts</h1>
-      <p>Browse and discover commute posts shared by the community.</p>
+  <!-- ================= HEADER ================= -->
+  <header class="page-header">
+    <div class="titles">
+      <h1>Find Your Ride</h1>
+      <p class="subtitle">Discover and connect with verified commuters</p>
     </div>
 
-    <button
-      mat-raised-button
-      color="primary"
-      class="create-btn"
-      (click)="openCreatePost()">
-
-      <mat-icon>add</mat-icon>
-      Create Post
-
-    </button>
-
-  </div>
-
-  <!-- Tabs -->
-  <div class="tabs">
-
-    <button
-      class="tab"
-      [class.active]="selectedTab === 'feed'"
-      (click)="selectTab('feed')">
-
-      Feed
-
-    </button>
-
-    <button
-      class="tab"
-      [class.active]="selectedTab === 'myPosts'"
-      (click)="selectTab('myPosts')">
-
-      My Posts
-
-    </button>
-
-  </div>
-
-  <!-- ================= FEED ================= -->
-
-  <ng-container *ngIf="selectedTab === 'feed'">
-
-    <!-- Filters -->
-    <mat-card class="filter-card">
-
-      <div class="filters">
-
-        <mat-form-field appearance="outline">
-
-          <mat-label>Origin</mat-label>
-
-          <input
-            matInput
-            [(ngModel)]="origin">
-
-        </mat-form-field>
-
-        <mat-form-field appearance="outline">
-
-          <mat-label>Destination</mat-label>
-
-          <input
-            matInput
-            [(ngModel)]="destination">
-
-        </mat-form-field>
-
-        <mat-form-field appearance="outline">
-
-          <mat-label>Status</mat-label>
-
-          <mat-select [(ngModel)]="status">
-
-            <mat-option value="">All</mat-option>
-            <mat-option value="ACTIVE">Active</mat-option>
-            <mat-option value="COMPLETED">Completed</mat-option>
-
-          </mat-select>
-
-        </mat-form-field>
-
-        <mat-form-field appearance="outline">
-
-          <mat-label>Date</mat-label>
-
-          <input
-            matInput
-            type="date"
-            [(ngModel)]="travelDate">
-
-        </mat-form-field>
-
-      </div>
-
-      <div class="filter-buttons">
-
-        <button
-          mat-flat-button
-          color="primary"
-          (click)="search()">
-
-          Search
-
-        </button>
-
-        <button
-          mat-stroked-button
-          (click)="reset()">
-
-          Reset
-
-        </button>
-
-      </div>
-
-    </mat-card>
-
-    <!-- Loading -->
-
-    <div
-      class="interest-error"
-      *ngIf="interestError">
-
-      {{ interestError }}
-
+    <div class="tabs">
+      <button class="tab"
+              [class.active]="selectedTab === 'feed'"
+              (click)="selectTab('feed')">
+        Feed
+      </button>
+      <button class="tab"
+              [class.active]="selectedTab === 'myPosts'"
+              (click)="selectTab('myPosts')">
+        My Posts
+      </button>
     </div>
+  </header>
 
-    <div
-      class="loading"
-      *ngIf="loading">
+  <!-- ================= MAIN LAYOUT ================= -->
+  <div class="layout">
 
-      <mat-spinner diameter="50"></mat-spinner>
+    <!-- ============ LEFT COLUMN (Feed) ============ -->
+    <section class="main-col">
 
-    </div>
+      <ng-container *ngIf="selectedTab === 'feed'">
 
-    <!-- Feed -->
+        <!-- Filter bar -->
+        <mat-card class="filter-card">
+          <div class="filters">
 
-    <ng-container *ngIf="!loading">
+            <mat-form-field appearance="outline">
+              <mat-label>From</mat-label>
+              <span matPrefix class="dot-prefix green"></span>
+              <input matInput [(ngModel)]="origin" placeholder="Mysuru" />
+            </mat-form-field>
 
-      <div
-        class="empty-state"
-        *ngIf="posts.length === 0">
+            <mat-form-field appearance="outline">
+              <mat-label>To</mat-label>
+              <span matPrefix class="dot-prefix blue"></span>
+              <input matInput [(ngModel)]="destination" placeholder="Any Destination" />
+            </mat-form-field>
 
-        <mat-icon>directions_car</mat-icon>
+            <mat-form-field appearance="outline">
+              <mat-label>Date</mat-label>
+              <input matInput type="date" [(ngModel)]="travelDate" />
+              <mat-icon matSuffix>calendar_today</mat-icon>
+            </mat-form-field>
 
-        <h2>No Posts Found</h2>
+            <mat-form-field appearance="outline">
+              <mat-label>Seats</mat-label>
+              <mat-select [(ngModel)]="seats">
+                <mat-option value="">Any</mat-option>
+                <mat-option value="1">1 Seat</mat-option>
+                <mat-option value="2">2 Seats</mat-option>
+                <mat-option value="3">3 Seats</mat-option>
+                <mat-option value="4">4+ Seats</mat-option>
+              </mat-select>
+            </mat-form-field>
 
-        <p>No commute posts available.</p>
-
-      </div>
-
-      <div
-        class="posts-grid"
-        *ngIf="posts.length > 0">
-
-        <mat-card
-          class="post-card"
-          *ngFor="let post of posts">
-
-          <div class="card-header">
-
-            <h2>
-
-              {{ post.origin }}
-
-              <mat-icon>arrow_forward</mat-icon>
-
-              {{ post.destination }}
-
-            </h2>
-
-            <span
-              class="status"
-              [class.completed]="post.status === 'COMPLETED'"
-              [class.open]="post.status === 'ACTIVE'">
-
-              {{ post.status }}
-
-            </span>
-
-          </div>
-
-          <div class="card-body">
-
-            <div class="info">
-
-              <mat-icon>person</mat-icon>
-
-              {{ post.owner.name }}
-
-            </div>
-
-            <div class="info">
-
-              <mat-icon>calendar_today</mat-icon>
-
-              {{ post.travelDate | date:'dd MMM yyyy' }}
-
-            </div>
-
-            <div class="info">
-
-              <mat-icon>schedule</mat-icon>
-
-              {{ post.travelTime }}
-
-            </div>
-
-            <div class="info">
-
-              <mat-icon>airline_seat_recline_normal</mat-icon>
-
-              {{ post.availableSeats }} Seats
-
-            </div>
-
-          </div>
-
-          <div
-            class="notes"
-            *ngIf="post.notes">
-
-            {{ post.notes }}
-
-          </div>
-
-          <div class="actions">
-
-            <button
-              mat-stroked-button
-              color="primary"
-              (click)="viewDetails(post)">
-
-              View Details
-
-            </button>
-
-            <button
-              mat-raised-button
-              color="primary"
-              [disabled]="interestedPostIds.has(post.id)"
-              (click)="expressInterest(post)">
-
-              {{ interestedPostIds.has(post.id) ? 'Interested ✓' : 'Express Interest' }}
-
+            <button mat-flat-button class="search-btn" (click)="search()">
+              <mat-icon>search</mat-icon>
+              Search Rides
             </button>
 
           </div>
-
         </mat-card>
 
-      </div>
+        <!-- Quick stats -->
+        <div class="quick-stats" *ngIf="!loading && posts.length">
+          <div class="stat-pill">
+            <div class="pill-icon blue"><mat-icon>directions_car</mat-icon></div>
+            <div>
+              <div class="pill-value">{{ totalRides }}</div>
+              <div class="pill-label">Available Rides</div>
+            </div>
+          </div>
 
-      <div
-        class="pagination"
-        *ngIf="pagination">
+          <div class="stat-pill">
+            <div class="pill-icon green"><mat-icon>trip_origin</mat-icon></div>
+            <div>
+              <div class="pill-value">{{ activeCount }}</div>
+              <div class="pill-label">Active Today</div>
+            </div>
+          </div>
 
-        <button
-          mat-stroked-button
-          (click)="previousPage()"
-          [disabled]="!pagination.hasPreviousPage">
+          <div class="stat-pill">
+            <div class="pill-icon amber"><mat-icon>verified</mat-icon></div>
+            <div>
+              <div class="pill-value">{{ verifiedCount }}</div>
+              <div class="pill-label">Verified Drivers</div>
+            </div>
+          </div>
+        </div>
 
-          Previous
+        <!-- Results header -->
+        <div class="results-header" *ngIf="!loading && posts.length">
+          <strong>{{ totalRides }} Rides Available</strong>
+          <div class="sort-block">
+            <span class="sort-hint">Sort by:</span>
+            <select class="sort-select" [(ngModel)]="sortBy">
+              <option value="latest">Latest</option>
+              <option value="date">Date</option>
+              <option value="seats">Seats</option>
+            </select>
+          </div>
+        </div>
 
-        </button>
+        <!-- Errors -->
+        <div class="interest-error" *ngIf="interestError">{{ interestError }}</div>
 
-        <span>
+        <!-- Loader -->
+        <div class="loading" *ngIf="loading">
+          <mat-spinner diameter="50"></mat-spinner>
+        </div>
 
-          Page {{ pagination.page }} of {{ pagination.totalPages }}
+        <!-- Content -->
+        <ng-container *ngIf="!loading">
 
-        </span>
+          <!-- Empty -->
+          <div class="empty-state" *ngIf="posts.length === 0">
+            <mat-icon>directions_car</mat-icon>
+            <h2>No Rides Found</h2>
+            <p>Try adjusting your filters or check back later.</p>
+          </div>
 
-        <button
-          mat-stroked-button
-          (click)="nextPage()"
-          [disabled]="!pagination.hasNextPage">
+          <!-- Ride cards -->
+          <div class="posts-grid" *ngIf="posts.length > 0">
+            <mat-card class="post-card" *ngFor="let post of posts">
 
-          Next
+              <span class="corner-status"
+                    [class.active]="post.status === 'ACTIVE'"
+                    [class.completed]="post.status === 'COMPLETED'">
+                {{ post.status | titlecase }}
+              </span>
 
-        </button>
+              <!-- Route timeline -->
+              <div class="route-timeline">
+                <div class="route-point">
+                  <span class="dot origin"></span>
+                  <div class="route-text">
+                    <span class="route-label">FROM</span>
+                    <span class="route-city">{{ post.origin }}</span>
+                  </div>
+                </div>
 
-      </div>
+                <div class="route-line"></div>
 
-    </ng-container>
+                <div class="route-point">
+                  <span class="dot destination"></span>
+                  <div class="route-text">
+                    <span class="route-label">TO</span>
+                    <span class="route-city">{{ post.destination }}</span>
+                  </div>
+                </div>
+              </div>
 
-  </ng-container>
+              <!-- Driver + status -->
+              <div class="driver-row">
+                <div class="driver">
+                  <div class="avatar">{{ post.owner?.name?.charAt(0) }}</div>
+                  <div>
+                    <div class="driver-name">{{ post.owner?.name }}</div>
+                    <div class="driver-role">Driver</div>
+                  </div>
+                </div>
 
-  <!-- ================= MY POSTS ================= -->
+                <span class="mini-status"
+                      [class.active]="post.status === 'ACTIVE'"
+                      [class.completed]="post.status === 'COMPLETED'">
+                  <span class="status-dot"></span>
+                  {{ post.status | titlecase }}
+                </span>
+              </div>
 
-  <ng-container *ngIf="selectedTab === 'myPosts'">
+              <!-- Info grid -->
+              <div class="info-grid">
+                <div class="info-cell">
+                  <mat-icon>calendar_today</mat-icon>
+                  <div>
+                    <span class="cell-label">DATE</span>
+                    <span class="cell-value">{{ post.travelDate | date:'dd MMM' }}</span>
+                  </div>
+                </div>
 
-    <app-my-posts></app-my-posts>
+                <div class="info-cell">
+                  <mat-icon>schedule</mat-icon>
+                  <div>
+                    <span class="cell-label">TIME</span>
+                    <span class="cell-value">{{ post.travelTime }}</span>
+                  </div>
+                </div>
 
-  </ng-container>
+                <div class="info-cell">
+                  <mat-icon>airline_seat_recline_normal</mat-icon>
+                  <div>
+                    <span class="cell-label">SEATS</span>
+                    <span class="cell-value">{{ post.availableSeats }} Seat</span>
+                  </div>
+                </div>
+              </div>
 
+              <!-- Notes -->
+              <div class="notes" *ngIf="post.notes">
+                <span class="notes-label">Notes</span>
+                <p>{{ post.notes }}</p>
+              </div>
+
+              <!-- Actions -->
+              <div class="actions">
+                <button mat-stroked-button class="btn-outline" (click)="viewDetails(post)">
+                  <mat-icon>visibility</mat-icon>
+                  View Details
+                </button>
+                <button mat-flat-button class="btn-primary"
+                        [disabled]="interestedPostIds.has(post.id)"
+                        (click)="expressInterest(post)">
+                  <mat-icon>favorite_border</mat-icon>
+                  Interested
+                </button>
+              </div>
+            </mat-card>
+          </div>
+
+          <!-- Pagination -->
+          <div class="pagination" *ngIf="pagination && posts.length > 0">
+            <button class="page-btn nav"
+                    (click)="previousPage()"
+                    [disabled]="!pagination.hasPreviousPage">
+              <mat-icon>chevron_left</mat-icon>
+            </button>
+
+            <button *ngFor="let n of pageNumbers()"
+                    class="page-btn"
+                    [class.active]="n === pagination.page"
+                    [class.dots]="n === -1"
+                    [disabled]="n === -1"
+                    (click)="goToPage(n)">
+              {{ n === -1 ? '...' : n }}
+            </button>
+
+            <button class="page-btn nav"
+                    (click)="nextPage()"
+                    [disabled]="!pagination.hasNextPage">
+              <mat-icon>chevron_right</mat-icon>
+            </button>
+          </div>
+
+        </ng-container>
+      </ng-container>
+
+      <!-- My posts tab -->
+      <ng-container *ngIf="selectedTab === 'myPosts'">
+        <app-my-posts></app-my-posts>
+      </ng-container>
+
+    </section>
+
+    <!-- ============ RIGHT SIDEBAR (Inline Create Ride) ============ -->
+    <aside class="side-col" *ngIf="selectedTab === 'feed'">
+
+      <mat-card class="create-card">
+        <div class="create-head">
+          <h2>Create a Ride</h2>
+          <p>Offer a ride and connect with others</p>
+        </div>
+
+        <form [formGroup]="createForm" class="create-form">
+
+          <label class="fld-label">From</label>
+          <mat-form-field appearance="outline" class="fld">
+            <span matPrefix class="dot-prefix green"></span>
+            <input matInput formControlName="origin" placeholder="Enter starting location" />
+            <mat-icon matSuffix>my_location</mat-icon>
+          </mat-form-field>
+
+          <label class="fld-label">To</label>
+          <mat-form-field appearance="outline" class="fld">
+            <span matPrefix class="dot-prefix blue"></span>
+            <input matInput formControlName="destination" placeholder="Enter destination" />
+            <mat-icon matSuffix>place</mat-icon>
+          </mat-form-field>
+
+          <label class="fld-label">Date</label>
+          <mat-form-field appearance="outline" class="fld">
+            <mat-icon matPrefix>calendar_today</mat-icon>
+            <input matInput type="date" formControlName="travelDate" placeholder="Select date" />
+          </mat-form-field>
+
+          <label class="fld-label">Time</label>
+          <mat-form-field appearance="outline" class="fld">
+            <mat-icon matPrefix>schedule</mat-icon>
+            <input matInput type="time" formControlName="travelTime" placeholder="Select time" />
+          </mat-form-field>
+
+       
+
+    
+
+          <label class="fld-label">Notes <span class="opt">(Optional)</span></label>
+          <mat-form-field appearance="outline" class="fld notes-fld">
+            <textarea matInput rows="3" maxlength="200"
+                      formControlName="notes"
+                      placeholder="Add any notes for passengers..."></textarea>
+            <mat-hint align="end">{{ createForm.get('notes')?.value?.length || 0 }}/200</mat-hint>
+          </mat-form-field>
+
+          <button mat-flat-button class="create-ride-btn"
+                  [disabled]="creating || createForm.invalid"
+                  (click)="submitCreate()">
+            <mat-icon>directions_car</mat-icon>
+            {{ creating ? 'Creating...' : 'Create Ride' }}
+          </button>
+        </form>
+      </mat-card>
+
+      <mat-card class="tips-card">
+        <div class="tips-head">
+          <mat-icon>lightbulb</mat-icon>
+          <span>Ride Tips</span>
+        </div>
+        <p>Add clear details and be polite to get more interest in your ride.</p>
+      </mat-card>
+
+    </aside>
+  </div>
 </div>

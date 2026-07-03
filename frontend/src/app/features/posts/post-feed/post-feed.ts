@@ -1,24 +1,29 @@
+
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 
-import { MatCardModule } from '@angular/material/card';
-import { MatButtonModule } from '@angular/material/button';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
+import { MatCardModule }            from '@angular/material/card';
+import { MatButtonModule }          from '@angular/material/button';
+import { MatFormFieldModule }       from '@angular/material/form-field';
+import { MatInputModule }           from '@angular/material/input';
+import { MatSelectModule }          from '@angular/material/select';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatIconModule } from '@angular/material/icon';
+import { MatIconModule }            from '@angular/material/icon';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 
-import { Post } from '../../../core/models/post';
+import { Post }       from '../../../core/models/post';
 import { Pagination } from '../../../core/models/pagination';
 
-import { CreatePost } from '../create-post/create-post';
-import { PostsService } from '../../../core/services/postservice';
+import { PostsService }     from '../../../core/services/postservice';
 import { InterestsService } from '../../../core/services/interests.service';
-import { MyPosts } from '../my-posts/my-posts';
-import { PostDetails } from '../post-details/post-details';
+import { MyPosts }          from '../my-posts/my-posts';
+import { PostDetails }      from '../post-details/post-details';
 
 @Component({
   selector: 'app-post-feed',
@@ -26,6 +31,7 @@ import { PostDetails } from '../post-details/post-details';
   imports: [
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
     MatCardModule,
     MatButtonModule,
     MatFormFieldModule,
@@ -41,170 +47,209 @@ import { PostDetails } from '../post-details/post-details';
 })
 export class PostFeed implements OnInit {
 
-  private postsService = inject(PostsService);
+  private postsService     = inject(PostsService);
   private interestsService = inject(InterestsService);
-  private cdr = inject(ChangeDetectorRef);
-
-  private dialog = inject(MatDialog);
+  private cdr              = inject(ChangeDetectorRef);
+  private dialog           = inject(MatDialog);
+  private fb               = inject(FormBuilder);
 
   posts: Post[] = [];
   selectedTab: 'feed' | 'myPosts' = 'feed';
-
-  // Tracks which posts the current user has already expressed
-  // interest in during this session, so the button can flip to
-  // a disabled "Interested" state without needing a re-fetch.
   interestedPostIds = new Set<string>();
-
   interestError = '';
 
-  selectTab(tab: 'feed' | 'myPosts') {
-    this.selectedTab = tab;
-
-    if (tab === 'feed') {
-      this.loadPosts();
-    }
-  }
-
   pagination!: Pagination;
-
   loading = true;
 
-  origin = '';
-
+  origin      = '';
   destination = '';
+  status      = '';
+  travelDate  = '';
+  seats       = '';
+  sortBy      = 'latest';
+  page        = 1;
+  limit       = 9;
 
-  status = '';
-
-  travelDate = '';
-
-  page = 1;
-
-  limit = 10;
+  creating = false;
+  createForm = this.fb.group({
+    origin:         ['', Validators.required],
+    destination:    ['', Validators.required],
+    travelDate:     ['', Validators.required],
+    travelTime:     ['', Validators.required],
+    availableSeats: [1,  [Validators.required, Validators.min(1)]],
+    
+    notes:          [''],
+  });
 
   ngOnInit(): void {
-
     this.loadPosts();
-
   }
 
-  loadPosts() {
+  get totalRides(): number {
+    const p = this.pagination as any;
+    return p?.total ?? p?.totalItems ?? p?.totalCount ?? this.posts.length;
+  }
 
+  get activeCount(): number {
+    return this.posts.filter(p => p.status === 'ACTIVE').length;
+  }
+
+  get verifiedCount(): number {
+    const owners = new Set(this.posts.map(p => p.owner?.email).filter(Boolean));
+    return owners.size;
+  }
+
+  selectTab(tab: 'feed' | 'myPosts'): void {
+    this.selectedTab = tab;
+    if (tab === 'feed') this.loadPosts();
+  }
+
+  loadPosts(): void {
     this.loading = true;
 
-    this.postsService.getPosts(
-      this.page,
-      this.limit,
-      this.origin,
-      this.destination,
-      this.status,
-      this.travelDate
-    ).subscribe({
-
-      next: (response) => {
-
-        this.posts = [...response.data];
-        this.pagination = response.pagination;
-        this.loading = false;
-        this.cdr.detectChanges();
-
-      },
-
-      error: () => {
-
-        this.loading = false;
-        this.cdr.detectChanges();
-
-      }
-
-    });
-
+    this.postsService
+      .getPosts(this.page, this.limit, this.origin, this.destination, this.status, this.travelDate)
+      .subscribe({
+        next: (response) => {
+          this.posts      = [...response.data];
+          this.pagination = response.pagination;
+          this.loading    = false;
+          this.cdr.detectChanges();
+        },
+        error: () => {
+          this.loading = false;
+          this.cdr.detectChanges();
+        },
+      });
   }
 
-  viewDetails(post: Post) {
-
-    this.dialog.open(PostDetails, {
-      width: '520px',
-      data: post,
-    });
-
+  viewDetails(post: Post): void {
+    this.dialog.open(PostDetails, { width: '520px', data: post });
   }
 
-  expressInterest(post: Post) {
-
+  expressInterest(post: Post): void {
     this.interestError = '';
-
     this.interestsService.expressInterest(post.id).subscribe({
-
       next: () => {
         this.interestedPostIds.add(post.id);
         this.cdr.detectChanges();
       },
-
       error: (err) => {
-
-        // If it already exists, treat it the same as success —
-        // the button should still flip to "Interested".
         if (err.status === 400) {
           this.interestedPostIds.add(post.id);
         } else {
           this.interestError = err.error?.message || 'Could not express interest';
         }
-
         this.cdr.detectChanges();
-
-      }
-
-    });
-
-  }
-
-  openCreatePost() {
-
-    const dialogRef = this.dialog.open(CreatePost, {
-
-      width: '800px',
-
-      disableClose: true,
-
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-
-      if (!result) return;
-
-      if (this.selectedTab === 'feed') {
-        this.loadPosts();
-      }
-
+      },
     });
   }
 
-  search() {
-    this.page = 1;
+submitCreate(): void {
+
+  if (this.createForm.invalid) {
+    this.createForm.markAllAsTouched();
+    return;
+  }
+
+  this.creating = true;
+
+  const payload = {
+    origin: this.createForm.get('origin')?.value,
+    destination: this.createForm.get('destination')?.value,
+    travelDate: this.createForm.get('travelDate')?.value,
+    travelTime: this.createForm.get('travelTime')?.value,
+    availableSeats: Number(this.createForm.get('availableSeats')?.value),
+    notes: this.createForm.get('notes')?.value ?? '',
+  };
+
+  this.postsService.createPost(payload).subscribe({
+    next: () => {
+
+      this.creating = false;
+
+      this.createForm.reset({
+        origin: '',
+        destination: '',
+        travelDate: '',
+        travelTime: '',
+        availableSeats: 1,
+        
+        notes: '',
+      });
+
+      this.page = 1;
+      this.loadPosts();
+
+    },
+
+    error: (err) => {
+
+      this.creating = false;
+
+      console.error(err);
+
+    }
+
+  });
+
+}
+search(): void {
+
+  this.origin = this.origin.trim();
+  this.destination = this.destination.trim();
+
+  this.page = 1;
+
+  this.loadPosts();
+
+}
+
+nsearch(): void {
+  this.page = 1;
+  this.loadPosts();
+}
+
+previousPage(): void {
+  if (this.pagination?.hasPreviousPage) {
+    this.page--;
     this.loadPosts();
   }
+}
 
-  reset() {
-    this.origin = '';
-    this.destination = '';
-    this.status = '';
-    this.travelDate = '';
-    this.page = 1;
+nextPage(): void {
+  if (this.pagination?.hasNextPage) {
+    this.page++;
     this.loadPosts();
   }
+}
 
-  previousPage() {
-    if (this.pagination?.hasPreviousPage) {
-      this.page--;
-      this.loadPosts();
-    }
+goToPage(page: number): void {
+  if (!this.pagination || page === this.pagination.page) {
+    return;
   }
 
-  nextPage() {
-    if (this.pagination?.hasNextPage) {
-      this.page++;
-      this.loadPosts();
-    }
-  }
+  this.page = page;
+  this.loadPosts();
+}
+  pageNumbers(): number[] {
+    const total   = this.pagination?.totalPages || 1;
+    const current = this.pagination?.page       || 1;
 
+    if (total <= 7) {
+      return Array.from({ length: total }, (_, i) => i + 1);
+    }
+
+    const pages: number[] = [1];
+    if (current > 3) pages.push(-1);
+
+    const start = Math.max(2, current - 1);
+    const end   = Math.min(total - 1, current + 1);
+    for (let i = start; i <= end; i++) pages.push(i);
+
+    if (current < total - 2) pages.push(-1);
+    pages.push(total);
+
+    return pages;
+  }
 }

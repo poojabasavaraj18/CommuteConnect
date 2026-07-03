@@ -1,115 +1,73 @@
-<h2 mat-dialog-title>Create Post</h2>
+<div class="create-ride-panel">
 
-<mat-dialog-content>
+  <button class="close-btn" (click)="close()"><mat-icon>close</mat-icon></button>
 
-    <form [formGroup]="postForm">
+  <h2>Create a Ride</h2>
+  <p class="muted">Offer a ride and connect with others</p>
 
-        <div class="grid">
+  <form [formGroup]="postForm" (ngSubmit)="createPost()" class="side-form">
 
-            <mat-form-field appearance="outline">
+    <label>From</label>
+    <div class="input-wrap">
+      <span class="dot green"></span>
+      <input formControlName="origin" placeholder="Enter starting location" />
+      <mat-icon class="trail">my_location</mat-icon>
+    </div>
+    <small class="err" *ngIf="postForm.get('origin')?.touched && postForm.get('origin')?.invalid">
+      Origin is required
+    </small>
 
-                <mat-label>Origin</mat-label>
+    <label>To</label>
+    <div class="input-wrap">
+      <span class="dot blue"></span>
+      <input formControlName="destination" placeholder="Enter destination" />
+      <mat-icon class="trail">place</mat-icon>
+    </div>
+    <small class="err" *ngIf="postForm.get('destination')?.touched && postForm.get('destination')?.invalid">
+      Destination is required
+    </small>
 
-                <input
-                    matInput
-                    formControlName="origin">
+    <label>Date</label>
+    <div class="input-wrap">
+      <mat-icon>calendar_today</mat-icon>
+      <input type="date" formControlName="travelDate" />
+    </div>
 
-                <mat-error *ngIf="postForm.get('origin')?.invalid">
-                    Origin is required
-                </mat-error>
+    <label>Time</label>
+    <div class="input-wrap">
+      <mat-icon>schedule</mat-icon>
+      <input type="time" formControlName="travelTime" />
+    </div>
 
-            </mat-form-field>
+    <label>Seats Available</label>
+    <div class="input-wrap">
+      <mat-icon>person</mat-icon>
+      <select formControlName="availableSeats">
+        <option [ngValue]="1">1</option>
+        <option [ngValue]="2">2</option>
+        <option [ngValue]="3">3</option>
+        <option [ngValue]="4">4</option>
+      </select>
+    </div>
 
-            <mat-form-field appearance="outline">
+  
 
-                <mat-label>Destination</mat-label>
+    <label>Notes <span class="opt">(Optional)</span></label>
+    <textarea formControlName="notes" maxlength="200"
+              placeholder="Add any notes for passengers..."></textarea>
+    <div class="char-count">{{ notesCount }}/200</div>
 
-                <input
-                    matInput
-                    formControlName="destination">
+    <div class="err-msg" *ngIf="errorMsg">{{ errorMsg }}</div>
 
-                <mat-error *ngIf="postForm.get('destination')?.invalid">
-                    Destination is required
-                </mat-error>
-
-            </mat-form-field>
-
-            <mat-form-field appearance="outline">
-
-                <mat-label>Travel Date</mat-label>
-
-                <input
-                    matInput
-                    type="date"
-                    formControlName="travelDate">
-
-            </mat-form-field>
-
-            <mat-form-field appearance="outline">
-
-                <mat-label>Travel Time</mat-label>
-
-                <input
-                    matInput
-                    type="time"
-                    formControlName="travelTime">
-
-            </mat-form-field>
-
-            <mat-form-field appearance="outline">
-
-                <mat-label>Available Seats</mat-label>
-
-                <input
-                    matInput
-                    type="number"
-                    formControlName="availableSeats">
-
-                <mat-error *ngIf="postForm.get('availableSeats')?.invalid">
-                    Minimum 1 seat required
-                </mat-error>
-
-            </mat-form-field>
-
-        </div>
-
-        <mat-form-field
-            appearance="outline"
-            class="full-width">
-
-            <mat-label>Notes</mat-label>
-
-            <textarea
-                matInput
-                rows="4"
-                formControlName="notes">
-            </textarea>
-
-        </mat-form-field>
-
-    </form>
-
-</mat-dialog-content>
-
-<mat-dialog-actions align="end">
-
-    <button
-        mat-stroked-button
-        color="primary"
-        (click)="close()">
-
-        Cancel
-
+    <button type="submit" class="create-btn-full" [disabled]="loading">
+      <mat-icon>directions_car</mat-icon>
+      {{ loading ? 'Creating...' : 'Create Ride' }}
     </button>
+  </form>
 
-    <button
-        mat-raised-button
-        color="primary"
-        (click)="createPost()"
-        [disabled]="loading">
+  <div class="tips-box">
+    <div class="tips-head"><mat-icon>lightbulb</mat-icon> Ride Tips</div>
+    <p>Add clear details and be polite to get more interest in your ride.</p>
+  </div>
 
-        {{ loading ? 'Creating...' : 'Create Post' }}
-
-    </button>
-
-</mat-dialog-actions>
+</div>

@@ -11,12 +11,10 @@ import {
   MatDialogRef,
 } from '@angular/material/dialog';
 
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { PostsService } from '../../../core/services/postservice';
+import { MatIconModule } from '@angular/material/icon';
 
+import { PostsService } from '../../../core/services/postservice';
 
 @Component({
   selector: 'app-create-post',
@@ -25,10 +23,8 @@ import { PostsService } from '../../../core/services/postservice';
     CommonModule,
     ReactiveFormsModule,
     MatDialogModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
     MatSnackBarModule,
+    MatIconModule,
   ],
   templateUrl: './create-post.html',
   styleUrl: './create-post.scss',
@@ -36,25 +32,18 @@ import { PostsService } from '../../../core/services/postservice';
 export class CreatePost {
 
   private fb = inject(FormBuilder);
-
   private postsService = inject(PostsService);
-
   private dialogRef = inject(MatDialogRef<CreatePost>);
-
   private snackBar = inject(MatSnackBar);
 
   loading = false;
+  errorMsg = '';
 
   postForm = this.fb.group({
-
     origin: ['', Validators.required],
-
     destination: ['', Validators.required],
-
     travelDate: ['', Validators.required],
-
     travelTime: ['', Validators.required],
-
     availableSeats: [
       1,
       [
@@ -63,76 +52,76 @@ export class CreatePost {
       ],
     ],
 
-    notes: [''],
+    // UI ONLY
+    rideType: ['CAR'],
 
+    notes: [''],
   });
 
-  createPost() {
+  get notesCount(): number {
+    return this.postForm.get('notes')?.value?.length ?? 0;
+  }
+
+  createPost(): void {
 
     if (this.postForm.invalid) {
-
       this.postForm.markAllAsTouched();
-
       return;
-
     }
 
     this.loading = true;
+    this.errorMsg = '';
 
-    this.postsService.createPost(
-      this.postForm.value
-    ).subscribe({
+    // Backend accepts ONLY these fields
+    const payload = {
+      origin: this.postForm.get('origin')?.value,
+      destination: this.postForm.get('destination')?.value,
+      travelDate: this.postForm.get('travelDate')?.value,
+      travelTime: this.postForm.get('travelTime')?.value,
+      availableSeats: Number(this.postForm.get('availableSeats')?.value),
+      notes: this.postForm.get('notes')?.value,
+    };
+
+    console.log('Payload Sent');
+    console.log(payload);
+
+    this.postsService.createPost(payload).subscribe({
 
       next: () => {
 
         this.loading = false;
 
         this.snackBar.open(
-
-          'Post created successfully',
-
+          'Ride created successfully',
           'Close',
-
           {
-
             duration: 3000,
-
           }
-
         );
 
         this.dialogRef.close(true);
 
       },
 
-      error: () => {
+      error: (err) => {
 
         this.loading = false;
 
-        this.snackBar.open(
+        console.error(err);
 
-          'Failed to create post',
+        this.errorMsg =
+          err?.error?.message?.join(', ') ??
+          err?.error?.message ??
+          'Failed to create ride';
 
-          'Close',
-
-          {
-
-            duration: 3000,
-
-          }
-
-        );
-
-      }
+      },
 
     });
 
   }
 
-  close() {
-
+  close(): void {
     this.dialogRef.close(false);
-
   }
 
 }

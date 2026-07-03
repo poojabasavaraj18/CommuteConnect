@@ -4,7 +4,37 @@ import { DashboardService } from '../../../core/services/dashboard.service';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { Navbar } from '../../../core/layout/navbar/navbar';
+
+interface RidePost {
+  id: string;
+  origin: string;
+  destination: string;
+  travelDate: string;
+  travelTime: string;
+  availableSeats: number;
+  status: 'ACTIVE' | 'COMPLETED';
+}
+
+interface InterestRequest {
+  id: string;
+  createdAt: string;
+  status: 'PENDING' | 'ACCEPTED' | 'REJECTED';
+  user?: { name?: string; email?: string };
+  post?: { origin?: string; destination?: string };
+}
+
+interface DashboardData {
+  user?: { name?: string; email?: string };
+  stats?: {
+    totalPosts?: number;
+    activePosts?: number;
+    interestsSent?: number;
+    interestsReceived?: number;
+  };
+  recentPosts: RidePost[];
+  recentReceivedInterests: InterestRequest[];
+}
+
 @Component({
   selector: 'app-dashboard',
   standalone: true,
@@ -17,43 +47,27 @@ export class Dashboard implements OnInit {
   private dashboardService = inject(DashboardService);
   private cdr = inject(ChangeDetectorRef);
 
-  dashboard: any = null;
-
+  dashboard: DashboardData | null = null;
   loading = true;
 
   ngOnInit(): void {
-
-    console.log('Dashboard Loaded');
-
     this.loading = true;
 
     this.dashboardService.getDashboard().subscribe({
-
-      next: (res) => {
-
-        console.log('Dashboard Response:', res);
-
-        this.dashboard = { ...res };
-
+      next: (res: any) => {
+        this.dashboard = {
+          ...res,
+          recentPosts: res?.recentPosts ?? [],
+          recentReceivedInterests: res?.recentReceivedInterests ?? [],
+        };
         this.loading = false;
-
-        console.log('Loading:', this.loading);
-
         this.cdr.detectChanges();
-
       },
-
       error: (err) => {
-
         console.error('Dashboard Error:', err);
-
         this.loading = false;
-
         this.cdr.detectChanges();
-
       }
-
     });
-
   }
 }

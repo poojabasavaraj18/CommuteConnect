@@ -68,6 +68,10 @@
 
 .menu a {
 
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
     text-decoration: none;
 
     color: #6b7280;
@@ -80,6 +84,17 @@
 
     transition: .25s;
 
+}
+
+.menu a mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+    color: inherit;
+}
+
+.menu a mat-icon.mat-badge {
+    margin-right: 4px;
 }
 
 .menu a:hover {
