@@ -32,7 +32,7 @@ export class PostsService {
     });
   }
 
- async findAll(query: GetPostsQueryDto) {
+async findAll(query: GetPostsQueryDto) {
   const {
     page = 1,
     limit = 10,
@@ -42,69 +42,83 @@ export class PostsService {
     travelDate,
   } = query;
 
-  const skip = (page - 1) * limit;
-
   const where: any = {};
 
-  // Origin Search (case-insensitive)
-  if (origin && origin.trim() !== '') {
-    where.origin = {
-      contains: origin.trim(),
-      mode: 'insensitive',
-    };
-  }
-
-  // Destination Search (case-insensitive)
-  if (destination && destination.trim() !== '') {
-    where.destination = {
-      contains: destination.trim(),
-      mode: 'insensitive',
-    };
-  }
-
-  // Status
+  // Status stays a hard filter — a COMPLETED ride is genuinely not what's being asked for
   if (status && status.trim() !== '') {
     where.status = status;
   }
 
-  // Travel Date
-  if (travelDate) {
-    const start = new Date(travelDate);
-    const end = new Date(travelDate);
-    end.setDate(end.getDate() + 1);
+  const hasOrigin = origin && origin.trim() !== '';
+  const hasDestination = destination && destination.trim() !== '';
 
-    where.travelDate = {
-      gte: start,
-      lt: end,
-    };
+  // Route filter: match the requested direction OR the reverse direction.
+  // (Bangalore->Mysore search will also surface Mysore->Bangalore posts,
+  // ranked lower — handled below.)
+  if (hasOrigin || hasDestination) {
+    const forward: any = {};
+    if (hasOrigin) forward.origin = { contains: origin!.trim(), mode: 'insensitive' };
+    if (hasDestination) forward.destination = { contains: destination!.trim(), mode: 'insensitive' };
+
+    const reverse: any = {};
+    if (hasOrigin) reverse.destination = { contains: origin!.trim(), mode: 'insensitive' };
+    if (hasDestination) reverse.origin = { contains: destination!.trim(), mode: 'insensitive' };
+
+    where.OR = [forward, reverse];
   }
 
-  const [posts, total] = await Promise.all([
-    this.prisma.post.findMany({
-      where,
-      skip,
-      take: limit,
-      include: {
-        owner: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-          },
+  // NOTE: travelDate is intentionally NOT applied as a DB filter here.
+  // We fetch all route-matching posts and rank by date closeness in JS,
+  // so a search for a date with no exact matches still returns the
+  // nearest available rides instead of an empty result.
+
+  const allMatches = await this.prisma.post.findMany({
+    where,
+    include: {
+      owner: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
         },
       },
-      orderBy: {
-        createdAt: 'desc',
-      },
-    }),
+    },
+  });
 
-    this.prisma.post.count({
-      where,
-    }),
-  ]);
+  const requestedDate = travelDate ? new Date(travelDate) : null;
+
+  const scored = allMatches.map((post) => {
+    let dateScore = 0;
+    if (requestedDate) {
+      const diffMs = Math.abs(post.travelDate.getTime() - requestedDate.getTime());
+      dateScore = Math.round(diffMs / (1000 * 60 * 60 * 24)); // difference in days
+    }
+
+    // Exact direction match ranks above the reversed direction
+    const isReversed =
+      hasOrigin &&
+      hasDestination &&
+      post.origin.toLowerCase().includes(destination!.trim().toLowerCase()) &&
+      post.destination.toLowerCase().includes(origin!.trim().toLowerCase());
+
+    return { post, dateScore, isReversed };
+  });
+
+  scored.sort((a, b) => {
+    // 1. Exact direction before reversed direction
+    if (a.isReversed !== b.isReversed) return a.isReversed ? 1 : -1;
+    // 2. Closer date first
+    if (a.dateScore !== b.dateScore) return a.dateScore - b.dateScore;
+    // 3. Most recently posted first
+    return b.post.createdAt.getTime() - a.post.createdAt.getTime();
+  });
+
+  const total = scored.length;
+  const start = (page - 1) * limit;
+  const paged = scored.slice(start, start + limit).map((s) => s.post);
 
   return {
-    data: posts,
+    data: paged,
     pagination: {
       total,
       page,
@@ -115,7 +129,6 @@ export class PostsService {
     },
   };
 }
-    
 
   async findMyPosts(userId: string) {
     return this.prisma.post.findMany({
