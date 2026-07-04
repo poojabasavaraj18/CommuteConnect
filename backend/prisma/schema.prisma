@@ -16,8 +16,8 @@ model User {
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
   interests     Interest[]
-  posts         Post[]
   notifications Notification[]
+  posts         Post[]
 }
 
 model Post {
@@ -40,41 +40,34 @@ model Interest {
   id        String         @id @default(uuid())
   userId    String
   postId    String
-  status    InterestStatus @default(PENDING)
   createdAt DateTime       @default(now())
+  status    InterestStatus @default(PENDING)
   post      Post           @relation(fields: [postId], references: [id], onDelete: Cascade)
   user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, postId])
 }
 
-// 2. Add this new enum (put it near your existing PostStatus enum):
+model Notification {
+  id          String           @id @default(uuid())
+  message     String
+  type        NotificationType
+  isRead      Boolean          @default(false)
+  userId      String
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  referenceId String?
+  user        User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
 enum InterestStatus {
   PENDING
   ACCEPTED
   REJECTED
 }
-model Notification {
-  id String @id @default(uuid())
 
-  message String
-
-  type NotificationType
-
-  isRead Boolean @default(false)
-
-  userId String
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  referenceId String? // holds the related Interest.id for INTEREST_RECEIVED notifications
-
-  createdAt DateTime @default(now())
-
-  updatedAt DateTime @updatedAt
-
-  @@index([userId])
-}
 enum NotificationType {
   INTEREST_RECEIVED
   INTEREST_ACCEPTED
