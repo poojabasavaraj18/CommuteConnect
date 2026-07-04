@@ -49,12 +49,18 @@
 }
 
 .logo span {
-    font-size: 28px;
-    font-weight: 450;
+    font-family: 'Manrope', sans-serif;
+    font-size: 34px;
+    font-weight: 500;
     color: #111827;
-    letter-spacing: -0.02em;
+    letter-spacing: -1px;
+    line-height: 1;
+    transition: all .25s ease;
 }
 
+.logo:hover span {
+    color: #2563eb;
+}
 .menu {
 
     display: flex;

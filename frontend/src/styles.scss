@@ -4,7 +4,7 @@
 // Learn more about theming and how to use it for your application's
 // custom components at https://material.angular.dev/guide/theming
 @use '@angular/material' as mat;
-
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@700;800&display=swap');
 html {
   height: 100%;
   @include mat.theme(
@@ -51,3 +51,4 @@ app-root {
   height: 100%;
   overflow: hidden;
 }
+

@@ -62,6 +62,7 @@
 
       <div class="loading" *ngIf="loadingReceived">
         <mat-spinner diameter="32"></mat-spinner>
+        <p>Loading interests received…</p>
       </div>
 
       <div class="empty-state" *ngIf="!loadingReceived && receivedInterests.length === 0">
@@ -127,6 +128,7 @@
 
       <div class="loading" *ngIf="loadingSent">
         <mat-spinner diameter="32"></mat-spinner>
+        <p>Loading interests sent…</p>
       </div>
 
       <div class="empty-state" *ngIf="!loadingSent && sentInterests.length === 0">

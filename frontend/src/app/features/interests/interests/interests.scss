@@ -1,13 +1,11 @@
-
-
-.interests-page{
-    height:100vh;
-    display:flex;
-    flex-direction:column;
-    padding:24px 32px;
-    background:#f6f8fb;
-    box-sizing:border-box;
-    overflow:hidden;
+.interests-page {
+  padding: 24px 32px 48px;
+  background: #f6f8fb;
+  min-height: 100vh;
+  height: 100vh;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
 }
 
 .page-header { margin-bottom: 20px; }
@@ -80,35 +78,29 @@
 .stat-text span { font-size: 12px; font-weight: 600; color: #475569; margin-top: 2px; }
 
 /* ============ ACTIVITY GRID ============ */
-.activity-grid{
-    flex:1;
-    min-height:0;
-
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:24px;
-
-    align-items:stretch;
+.activity-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  align-items: stretch;
+  flex: 1;
+  min-height: 0;
 }
 
-.content-card{
-    display:flex;
-    flex-direction:column;
-
-    height:70%;
-    min-height:0;
-
-    padding:24px 28px;
-
-    background:#fff;
-    border:1px solid #e8edf5;
-    border-radius:14px;
-
-    overflow:hidden;
-
-    box-shadow:
-      0 2px 8px rgba(15,23,42,.04),
-      0 10px 24px rgba(15,23,42,.04);
+.content-card {
+  display: flex;
+  flex-direction: column;
+  /* fills its activity-grid cell exactly, so the bottom edge always lands
+     inside the screen — no guessed pixel values needed */
+  height: 85%;
+  min-height: 0;
+  padding: 24px 28px;
+  border-radius: 20px;
+  background: #ffffff;
+  border: 1px solid #eef2f7;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05), 0 2px 8px rgba(15, 23, 42, 0.03);
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 /* ---- header ---- */
@@ -174,9 +166,18 @@
 .loading {
   flex: 1;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 14px;
   padding: 40px 0;
+
+  p {
+    margin: 0;
+    font-size: 13px;
+    font-weight: 500;
+    color: #94a3b8;
+  }
 }
 
 .empty-state {
@@ -214,7 +215,6 @@
   &::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 }
 
-
 .post-row,
 .request-row {
   display: flex;
@@ -222,8 +222,8 @@
   gap: 16px;
   padding: 16px;
   border-radius: 10px;
-  background: #f8fafc;
-  border: 1px solid #f1f5f9;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
   transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
   flex-shrink: 0;
 
@@ -238,8 +238,8 @@
 .avatar {
   width: 40px;
   height: 40px;
-  font-size: 12px;
-  border-radius: 10px;
+  font-size: 14px;
+  border-radius: 12px;
   font-weight: 700;
   color: white;
   flex-shrink: 0;
@@ -249,13 +249,7 @@
   /* fallback if no inline background gets bound */
   background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
 }
-// .avatar {
-//   width: 40px;      /* was 48px */
-//   height: 40px;      /* was 48px */
-//   font-size: 14px;   /* was 16px */
-//   border-radius: 12px; /* was 14px, slightly smaller to match */
-//   ...
-// }
+
 .row-main {
   flex: 1;
   min-width: 0;
@@ -381,19 +375,14 @@
 }
 
 @media (max-width: 1024px) {
+  .interests-page { height: auto; min-height: 100vh; }
   .stats-grid { grid-template-columns: repeat(2, 1fr); }
-  .activity-grid { grid-template-columns: 1fr; }
-  .content-card { height: 480px; max-height: none; }
+  .activity-grid { grid-template-columns: 1fr; flex: none; }
+  .content-card { height: 480px; }
 }
 
 @media (max-width: 480px) {
-  .interests-page { padding: 16px; }
+  .interests-page { padding: 16px; height: auto; }
   .stats-grid { grid-template-columns: 1fr; }
-  .content-card { height: 440px; max-height: none; padding: 20px; }
-}
-.post-list,
-.request-list{
-
-    padding-bottom:12px;
-
+  .content-card { height: 440px; padding: 20px; }
 }
