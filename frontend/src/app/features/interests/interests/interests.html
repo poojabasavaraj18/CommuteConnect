@@ -58,7 +58,6 @@
             <span class="card-subtitle">Requests from other users</span>
           </div>
         </div>
-        
       </div>
 
       <div class="loading" *ngIf="loadingReceived">
@@ -71,9 +70,11 @@
       </div>
 
       <div class="request-list" *ngIf="!loadingReceived && receivedInterests.length > 0">
-        <div class="request-row" *ngFor="let item of receivedInterests | slice:0:5">
+        <div class="request-row" *ngFor="let item of receivedInterests">
 
-          <div class="avatar">{{ item.user?.name?.charAt(0)?.toUpperCase() }}</div>
+          <div class="avatar" [style.background]="getAvatarColor(item.user?.name)">
+            {{ item.user?.name?.charAt(0)?.toUpperCase() }}
+          </div>
 
           <div class="row-main">
             <span class="row-name">{{ item.user?.name }}</span>
@@ -122,7 +123,6 @@
             <span class="card-subtitle">Requests you've sent to others</span>
           </div>
         </div>
-       
       </div>
 
       <div class="loading" *ngIf="loadingSent">
@@ -135,9 +135,11 @@
       </div>
 
       <div class="post-list" *ngIf="!loadingSent && sentInterests.length > 0">
-        <div class="post-row" *ngFor="let item of sentInterests | slice:0:5">
+        <div class="post-row" *ngFor="let item of sentInterests">
 
-          <div class="avatar">{{ item.post?.owner?.name?.charAt(0)?.toUpperCase() }}</div>
+          <div class="avatar" [style.background]="getAvatarColor(item.post?.owner?.name)">
+            {{ item.post?.owner?.name?.charAt(0)?.toUpperCase() }}
+          </div>
 
           <div class="row-main">
             <span class="row-name">{{ item.post?.owner?.name }}</span>

@@ -1,10 +1,10 @@
-import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { InterestsService } from '../../../core/services/interests.service';
+import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-interests',
@@ -32,12 +32,12 @@ export class Interests implements OnInit {
   respondInProgress: Record<string, boolean> = {};
 
   private avatarColors = [
-    'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-    'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
-    'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
-    'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
-    'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
-    'linear-gradient(135deg, #30cfd0 0%, #330867 100%)',
+    'linear-gradient(135deg, #2563eb 0%, #1e40af 100%)', // blue
+    'linear-gradient(135deg, #059669 0%, #047857 100%)', // green
+    'linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%)', // violet
+    'linear-gradient(135deg, #0891b2 0%, #155e75 100%)', // teal
+    'linear-gradient(135deg, #ea580c 0%, #c2410c 100%)', // orange
+    'linear-gradient(135deg, #4338ca 0%, #312e81 100%)', // indigo
   ];
 
   ngOnInit(): void {
