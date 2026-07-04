@@ -1,75 +1,175 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  height: 100%;
+}
+
+
 .my-posts-page {
-  padding: 32px;
+  width: 100%;
+  max-width: 100%;
+  padding: 0 8px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 60px 0;
+
+  p { color: #64748b; font-size: 13px; font-weight: 500; margin: 0; }
 }
 
 .header {
-  margin-bottom: 24px;
+  margin-bottom: 4px;
+  flex-shrink: 0;
+
+  h1 { margin: 0; font-size: 22px; font-weight: 800; color: #0f172a; }
+  p  { margin: 2px 0 0; color: #64748b; font-size: 12px; }
 }
 
-.header h1 {
-  margin: 0;
-  font-size: 32px;
+.table-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 4px;
+  margin-bottom: 6px;
+  flex-shrink: 0;
+}
+.total-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #eff6ff;
+  color: #2563eb;
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-size: 13px;
   font-weight: 700;
+  white-space: nowrap;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+}
+/* ==================== TABLE CARD ==================== */
+.table-card {
+  width: 100%;
+  flex: 1 1 auto;
+  min-height: 0;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  box-shadow: 0 4px 18px rgba(15, 23, 42, 0.05);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
-.header p {
-  margin-top: 8px;
-  color: #666;
+.table-scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
 }
 
 .posts-table {
   width: 100%;
   border-collapse: collapse;
-  background: #fff;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 2px 12px rgba(0,0,0,.08);
 }
 
-.posts-table th {
-  background: #2563eb;
-  color: white;
-  padding: 16px;
+.posts-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: #f8fafc;
   text-align: left;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #64748b;
+  padding: 14px 18px;
+  border-bottom: 1px solid #e5e7eb;
 }
 
-.posts-table td {
-  padding: 16px;
-  border-bottom: 1px solid #eee;
+.posts-table tbody td {
+  padding: 14px 18px;
+  font-size: 13px;
+  color: #334155;
+  border-bottom: 1px solid #f1f5f9;
+  white-space: nowrap;
 }
 
-.posts-table tr:hover {
+.posts-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.posts-table tbody tr:hover {
   background: #f8fafc;
 }
 
-.status {
-  padding: 6px 12px;
-  border-radius: 20px;
-  background: #dcfce7;
-  color: #166534;
-  font-weight: 600;
+.cell-strong {
+  font-weight: 700;
+  color: #0f172a;
 }
 
-button {
-  margin-right: 8px;
-  padding: 8px 14px;
+.status-pill {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 11px;
+  text-transform: capitalize;
+
+  &.active    { background: #dcfce7; color: #16a34a; }
+  &.completed { background: #dbeafe; color: #2563eb; }
+  &.cancelled { background: #fee2e2; color: #ef4444; }
+}
+
+.actions-col { width: 160px; }
+
+.row-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.action-btn {
   border: none;
-  border-radius: 6px;
+  border-radius: 7px;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 600;
   cursor: pointer;
+  transition: 0.15s;
 }
 
-button:first-child {
-  background: #2563eb;
-  color: white;
+.action-btn.edit {
+  background: #eff6ff;
+  color: #2563eb;
 }
+.action-btn.edit:hover { background: #dbeafe; }
 
-button:last-child {
-  background: #ef4444;
-  color: white;
+.action-btn.delete {
+  background: #fef2f2;
+  color: #ef4444;
 }
+.action-btn.delete:hover { background: #fee2e2; }
 
-.empty {
-  text-align: center;
-  margin-top: 80px;
-  color: #777;
+/* ==================== EMPTY STATE ==================== */
+.empty-state {
+  background: #fff; border: 1px dashed #e5e7eb; border-radius: 16px;
+  padding: 40px 20px; text-align: center; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
 }
+.empty-state mat-icon { font-size: 40px; width: 40px; height: 40px; color: #cbd5e1; }
+.empty-state h2 { margin: 10px 0 4px; color: #0f172a; font-size: 16px; }
+.empty-state p  { color: #64748b; margin: 0; font-size: 12px; }

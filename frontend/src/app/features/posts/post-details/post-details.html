@@ -1,76 +1,96 @@
-<h2 mat-dialog-title>Ride Details</h2>
+<div class="details-wrapper">
 
-<div mat-dialog-content class="details-content">
-
-  <div class="route">
-    <span>{{ post.origin }}</span>
-    <mat-icon>arrow_forward</mat-icon>
-    <span>{{ post.destination }}</span>
+  <div class="details-header">
+    <h2 mat-dialog-title>Ride Details</h2>
+    <button class="close-icon-btn" (click)="close()">
+      <mat-icon>close</mat-icon>
+    </button>
   </div>
 
-  <span
-    class="status"
-    [class.completed]="post.status === 'COMPLETED'"
-    [class.cancelled]="post.status === 'CANCELLED'"
-    [class.active]="post.status === 'ACTIVE'">
+  <mat-dialog-content class="details-content">
 
-    {{ post.status }}
+    <div class="route-banner">
+      <div class="route-point">
+        <span class="dot origin"></span>
+        <div class="route-text">
+          <span class="route-label">FROM</span>
+          <span class="route-city">{{ post.origin }}</span>
+        </div>
+      </div>
 
-  </span>
+      <mat-icon class="route-arrow">arrow_forward</mat-icon>
 
-  <div class="detail-grid">
+      <div class="route-point">
+        <span class="dot destination"></span>
+        <div class="route-text">
+          <span class="route-label">TO</span>
+          <span class="route-city">{{ post.destination }}</span>
+        </div>
+      </div>
 
-    <div class="detail-item">
-      <mat-icon>person</mat-icon>
+      <span class="status"
+            [class.active]="post.status === 'ACTIVE'"
+            [class.completed]="post.status === 'COMPLETED'"
+            [class.cancelled]="post.status === 'CANCELLED'">
+        {{ post.status | titlecase }}
+      </span>
+    </div>
+
+    <div class="driver-block">
+      <div class="avatar">{{ post.owner?.name?.charAt(0) }}</div>
       <div>
-        <span class="label">Driver</span>
-        <span class="value">{{ post.owner?.name }}</span>
+        <div class="driver-name">{{ post.owner?.name }}</div>
+        <div class="driver-email">{{ post.owner?.email }}</div>
       </div>
     </div>
 
-    <div class="detail-item">
-      <mat-icon>email</mat-icon>
-      <div>
-        <span class="label">Contact</span>
-        <span class="value">{{ post.owner?.email }}</span>
+    <div class="detail-grid">
+
+      <div class="detail-item">
+        <div class="icon-badge blue"><mat-icon>calendar_today</mat-icon></div>
+        <div>
+          <span class="label">Travel Date</span>
+          <span class="value">{{ post.travelDate | date:'dd MMM yyyy' }}</span>
+        </div>
       </div>
+
+      <div class="detail-item">
+        <div class="icon-badge blue"><mat-icon>schedule</mat-icon></div>
+        <div>
+          <span class="label">Travel Time</span>
+          <span class="value">{{ post.travelTime }}</span>
+        </div>
+      </div>
+
+      <div class="detail-item">
+        <div class="icon-badge green"><mat-icon>airline_seat_recline_normal</mat-icon></div>
+        <div>
+          <span class="label">Seats Left</span>
+          <span class="value">{{ post.availableSeats }}</span>
+        </div>
+      </div>
+
+      <div class="detail-item">
+        <div class="icon-badge purple"><mat-icon>mail</mat-icon></div>
+        <div>
+          <span class="label">Contact</span>
+          <span class="value">{{ post.owner?.email }}</span>
+        </div>
+      </div>
+
     </div>
 
-    <div class="detail-item">
-      <mat-icon>calendar_today</mat-icon>
-      <div>
-        <span class="label">Travel Date</span>
-        <span class="value">{{ post.travelDate | date:'dd MMM yyyy' }}</span>
-      </div>
+    <div class="notes-block" *ngIf="post.notes">
+      <span class="label">Notes</span>
+      <p>{{ post.notes }}</p>
     </div>
 
-    <div class="detail-item">
-      <mat-icon>schedule</mat-icon>
-      <div>
-        <span class="label">Travel Time</span>
-        <span class="value">{{ post.travelTime }}</span>
-      </div>
-    </div>
+  </mat-dialog-content>
 
-    <div class="detail-item">
-      <mat-icon>airline_seat_recline_normal</mat-icon>
-      <div>
-        <span class="label">Seats Left</span>
-        <span class="value">{{ post.availableSeats }}</span>
-      </div>
-    </div>
+  <mat-dialog-actions class="details-footer">
+    <button mat-flat-button class="btn-primary-solid" (click)="close()">
+      Close
+    </button>
+  </mat-dialog-actions>
 
-  </div>
-
-  <div class="notes-block" *ngIf="post.notes">
-    <span class="label">Notes</span>
-    <p>{{ post.notes }}</p>
-  </div>
-
-</div>
-
-<div mat-dialog-actions align="end">
-  <button mat-raised-button color="primary" (click)="close()">
-    Close
-  </button>
 </div>

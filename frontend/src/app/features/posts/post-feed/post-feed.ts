@@ -1,4 +1,3 @@
-
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
@@ -68,18 +67,22 @@ export class PostFeed implements OnInit {
   seats       = '';
   sortBy      = 'latest';
   page        = 1;
-  limit       = 9;
+  // Exactly 3 cards per page (one row) so every card can show full
+  // detail without being clipped, and the page never scrolls.
+  limit       = 3;
 
   creating = false;
-  createForm = this.fb.group({
-    origin:         ['', Validators.required],
-    destination:    ['', Validators.required],
-    travelDate:     ['', Validators.required],
-    travelTime:     ['', Validators.required],
-    availableSeats: [1,  [Validators.required, Validators.min(1)]],
-    
-    notes:          [''],
-  });
+createForm = this.fb.group({
+  origin: ['', Validators.required],
+  destination: ['', Validators.required],
+  travelDate: ['', Validators.required],
+
+  travelTime: ['', Validators.required],   
+  period: ['AM', Validators.required],     
+
+  availableSeats: [1, [Validators.required, Validators.min(1)]],
+  notes: [''],
+});
 
   ngOnInit(): void {
     this.loadPosts();
@@ -154,11 +157,15 @@ submitCreate(): void {
 
   this.creating = true;
 
+
+  
+
   const payload = {
     origin: this.createForm.get('origin')?.value,
     destination: this.createForm.get('destination')?.value,
     travelDate: this.createForm.get('travelDate')?.value,
-    travelTime: this.createForm.get('travelTime')?.value,
+   travelTime:
+  `${this.createForm.value.travelTime} ${this.createForm.value.period}`,
     availableSeats: Number(this.createForm.get('availableSeats')?.value),
     notes: this.createForm.get('notes')?.value ?? '',
   };
@@ -173,6 +180,7 @@ submitCreate(): void {
         destination: '',
         travelDate: '',
         travelTime: '',
+period: 'AM',
         availableSeats: 1,
         
         notes: '',
@@ -205,6 +213,8 @@ search(): void {
 
 }
 
+
+
 nsearch(): void {
   this.page = 1;
   this.loadPosts();
@@ -223,6 +233,7 @@ nextPage(): void {
     this.loadPosts();
   }
 }
+
 
 goToPage(page: number): void {
   if (!this.pagination || page === this.pagination.page) {

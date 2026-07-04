@@ -1,70 +1,76 @@
 <div class="my-posts-page">
 
-    <div class="header">
+  <div class="header">
+    <div>
+      <!-- <h1>My Posts</h1> -->
+      <p>Manage all your commute posts</p>
+    </div>
+  </div>
 
-        <div>
-            <h1>My Posts</h1>
-            <p>Manage all your commute posts.</p>
-        </div>
+  <div class="loading" *ngIf="loading">
+    <mat-spinner diameter="36"></mat-spinner>
+    <p>Loading your posts...</p>
+  </div>
 
+  <ng-container *ngIf="!loading">
+
+        <div class="table-toolbar">
+      <div class="total-badge">
+        <mat-icon>directions_car</mat-icon>
+        <span>{{ myPosts.length }} Total Posts</span>
+      </div>
     </div>
 
-    <div class="loading" *ngIf="loading">
-        <p>Loading your posts…</p>
-    </div>
+    <div class="table-card" *ngIf="myPosts.length > 0">
+      <div class="table-scroll">
+        <table class="posts-table">
 
-    <table class="posts-table" *ngIf="!loading && myPosts.length > 0">
-
-        <thead>
-
+          <thead>
             <tr>
-                <th>Origin</th>
-                <th>Destination</th>
-                <th>Date</th>
-                <th>Time</th>
-                <th>Seats</th>
-                <th>Status</th>
-                <th>Actions</th>
+              <th>Origin</th>
+              <th>Destination</th>
+              <th>Date</th>
+              <th>Time</th>
+              <th>Seats</th>
+              <th>Status</th>
+              <th class="actions-col">Actions</th>
             </tr>
+          </thead>
 
-        </thead>
-
-        <tbody>
-
+          <tbody>
             <tr *ngFor="let post of myPosts">
-
-                <td>{{ post.origin }}</td>
-
-                <td>{{ post.destination }}</td>
-
-                <td>{{ post.travelDate | date:'dd MMM yyyy' }}</td>
-
-                <td>{{ post.travelTime }}</td>
-
-                <td>{{ post.availableSeats }}</td>
-
-                <td>{{ post.status }}</td>
-
-                <td>
-
-                    <button (click)="editPost(post)">Edit</button>
-
-                    <button (click)="deletePost(post)">Delete</button>
-
-                </td>
-
+              <td class="cell-strong">{{ post.origin }}</td>
+              <td class="cell-strong">{{ post.destination }}</td>
+              <td>{{ post.travelDate | date:'dd MMM yyyy' }}</td>
+              <td>{{ post.travelTime }}</td>
+              <td>{{ post.availableSeats }}</td>
+              <td>
+                <span class="status-pill"
+                      [class.active]="post.status === 'ACTIVE'"
+                      [class.completed]="post.status === 'COMPLETED'"
+                      [class.cancelled]="post.status === 'CANCELLED'">
+                  {{ post.status | titlecase }}
+                </span>
+              </td>
+              <td>
+                <div class="row-actions">
+                  <button class="action-btn edit" (click)="editPost(post)">Edit</button>
+                  <button class="action-btn delete" (click)="deletePost(post)">Delete</button>
+                </div>
+              </td>
             </tr>
+          </tbody>
 
-        </tbody>
-
-    </table>
-
-    <div class="empty" *ngIf="!loading && myPosts.length === 0">
-
-        <h2>No Posts Found</h2>
-
-        <p>You haven't created any posts yet.</p>
-
+        </table>
+      </div>
     </div>
+
+    <div class="empty-state" *ngIf="myPosts.length === 0">
+      <mat-icon>directions_car</mat-icon>
+      <h2>No Posts Found</h2>
+      <p>You haven't created any posts yet.</p>
+    </div>
+
+  </ng-container>
 
 </div>

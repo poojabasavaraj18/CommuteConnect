@@ -4,147 +4,224 @@
 </div>
 
 <ng-container *ngIf="!loading && dashboard as data">
-  <div class="dashboard">
+  <div class="dashboard-layout">
 
-    <!-- Header -->
-    <section class="header-card">
-      <p class="greeting">Hello {{ data.user?.name }} 👋</p>
-      <p class="subtitle">Let's make your commute better.</p>
-    </section>
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
 
-    <!-- Statistics -->
-    <section class="stats-grid">
+      <!-- Header -->
+      <section class="header-card">
+        <p class="greeting">Hello {{ data.user?.name }} 👋</p>
+        <p class="subtitle">Let's make your commute better.</p>
+      </section>
 
-      <mat-card class="stat-card blue">
-        <div class="stat-inner">
-          <div class="icon-circle"><mat-icon>directions_car</mat-icon></div>
-          <div class="stat-text">
-            <h2>{{ data.stats?.totalPosts ?? 0 }}</h2>
-            <span>My Posts</span>
-            <small>Total</small>
-          </div>
-        </div>
-      </mat-card>
+      <!-- Statistics -->
+      <section class="stats-grid">
 
-      <mat-card class="stat-card green">
-        <div class="stat-inner">
-          <div class="icon-circle"><mat-icon>check_circle</mat-icon></div>
-          <div class="stat-text">
-            <h2>{{ data.stats?.activePosts ?? 0 }}</h2>
-            <span>Active Posts</span>
-            <small>Active</small>
-          </div>
-        </div>
-      </mat-card>
-
-      <mat-card class="stat-card purple">
-        <div class="stat-inner">
-          <div class="icon-circle"><mat-icon>send</mat-icon></div>
-          <div class="stat-text">
-            <h2>{{ data.stats?.interestsSent ?? 0 }}</h2>
-            <span>Interests Sent</span>
-            <small>Sent</small>
-          </div>
-        </div>
-      </mat-card>
-
-      <mat-card class="stat-card orange">
-        <div class="stat-inner">
-          <div class="icon-circle"><mat-icon>group</mat-icon></div>
-          <div class="stat-text">
-            <h2>{{ data.stats?.interestsReceived ?? 0 }}</h2>
-            <span>Interests Received</span>
-            <small>Received</small>
-          </div>
-        </div>
-      </mat-card>
-
-    </section>
-
-    <!-- Recent activity -->
-    <section class="activity-grid">
-
-      <!-- Recent Ride Posts -->
-      <mat-card class="content-card">
-        <div class="card-header">
-          <h2>My Recent Posts</h2>
-          <a class="view-all">View all</a>
-        </div>
-
-        <div *ngIf="!data.recentPosts.length" class="empty-state">
-          <mat-icon>directions_car</mat-icon>
-          <p>No ride posts yet.</p>
-        </div>
-
-        <div class="post-list" *ngIf="data.recentPosts.length">
-          <div class="post-row" *ngFor="let post of data.recentPosts | slice:0:4">
-
-            <div class="icon-circle small blue">
-              <mat-icon>directions_car</mat-icon>
+        <mat-card class="stat-card blue">
+          <div class="stat-inner">
+            <div class="icon-circle"><mat-icon>directions_car</mat-icon></div>
+            <div class="stat-text">
+              <h2>{{ data.stats?.totalPosts ?? 0 }}</h2>
+              <span>My Posts</span>
+              <small>Total</small>
             </div>
-
-            <div class="row-main">
-              <div class="route">
-                <span>{{ post.origin }}</span>
-                <mat-icon class="arrow">arrow_forward</mat-icon>
-                <span>{{ post.destination }}</span>
-              </div>
-              <div class="row-meta">
-                {{ post.travelDate | date:'dd MMM yyyy' }} · {{ post.travelTime }} · {{ post.availableSeats }} Seats
-              </div>
-            </div>
-
-            <span
-              class="status-badge"
-              [class.active]="post.status === 'ACTIVE'"
-              [class.completed]="post.status === 'COMPLETED'">
-              {{ post.status }}
-            </span>
-
           </div>
-        </div>
-      </mat-card>
+        </mat-card>
 
-      <!-- Recent Interests -->
-      <mat-card class="content-card">
-        <div class="card-header">
-          <h2>Recent Interests Received</h2>
-          <a class="view-all">View all</a>
-        </div>
-
-        <div *ngIf="!data.recentReceivedInterests.length" class="empty-state">
-          <mat-icon>mail_outline</mat-icon>
-          <p>No requests received.</p>
-        </div>
-
-        <div class="request-list" *ngIf="data.recentReceivedInterests.length">
-          <div class="request-row" *ngFor="let item of data.recentReceivedInterests | slice:0:4">
-
-            <div class="avatar">{{ item.user?.name?.charAt(0) }}</div>
-
-            <div class="row-main">
-              <span class="row-name">{{ item.user?.name }}</span>
-              <div class="row-meta">
-                {{ item.post?.origin || 'from' }} → {{ item.post?.destination || 'to' }}
-              </div>
+        <mat-card class="stat-card green">
+          <div class="stat-inner">
+            <div class="icon-circle"><mat-icon>check_circle</mat-icon></div>
+            <div class="stat-text">
+              <h2>{{ data.stats?.activePosts ?? 0 }}</h2>
+              <span>Active Posts</span>
+              <small>Active</small>
             </div>
+          </div>
+        </mat-card>
 
-            <div class="row-end">
-              <span class="chip time">{{ item.createdAt | date:'shortDate' }}</span>
+        <mat-card class="stat-card purple">
+          <div class="stat-inner">
+            <div class="icon-circle"><mat-icon>send</mat-icon></div>
+            <div class="stat-text">
+              <h2>{{ data.stats?.interestsSent ?? 0 }}</h2>
+              <span>Interests Sent</span>
+              <small>Sent</small>
+            </div>
+          </div>
+        </mat-card>
+
+        <mat-card class="stat-card orange">
+          <div class="stat-inner">
+            <div class="icon-circle"><mat-icon>group</mat-icon></div>
+            <div class="stat-text">
+              <h2>{{ data.stats?.interestsReceived ?? 0 }}</h2>
+              <span>Interests Received</span>
+              <small>Received</small>
+            </div>
+          </div>
+        </mat-card>
+
+      </section>
+
+      <!-- Recent activity -->
+      <section class="activity-grid">
+
+        <!-- Recent Ride Posts -->
+        <mat-card class="content-card">
+          <div class="card-header">
+            <h2>My Recent Posts</h2>
+            <a class="view-all">View all</a>
+          </div>
+
+          <div *ngIf="!data.recentPosts.length" class="empty-state">
+            <mat-icon>directions_car</mat-icon>
+            <p>No ride posts yet.</p>
+          </div>
+
+          <div class="post-list" *ngIf="data.recentPosts.length">
+            <div class="post-row" *ngFor="let post of data.recentPosts | slice:0:4">
+
+              <div class="icon-circle small blue">
+                <mat-icon>directions_car</mat-icon>
+              </div>
+
+              <div class="row-main">
+                <div class="route">
+                  <span>{{ post.origin }}</span>
+                  <mat-icon class="arrow">arrow_forward</mat-icon>
+                  <span>{{ post.destination }}</span>
+                </div>
+                <div class="row-meta">
+                  {{ post.travelDate | date:'dd MMM yyyy' }} · {{ post.travelTime }} · {{ post.availableSeats }} Seats
+                </div>
+              </div>
+
               <span
                 class="status-badge"
-                [class.pending]="item.status === 'PENDING'"
-                [class.accepted]="item.status === 'ACCEPTED'"
-                [class.rejected]="item.status === 'REJECTED'">
-                {{ item.status }}
+                [class.active]="post.status === 'ACTIVE'"
+                [class.completed]="post.status === 'COMPLETED'">
+                {{ post.status }}
+              </span>
+
+            </div>
+          </div>
+        </mat-card>
+
+        <!-- Recent Interests -->
+        <mat-card class="content-card">
+          <div class="card-header">
+            <h2>Recent Interests Received</h2>
+            <a class="view-all">View all</a>
+          </div>
+
+          <div *ngIf="!data.recentReceivedInterests.length" class="empty-state">
+            <mat-icon>mail_outline</mat-icon>
+            <p>No requests received.</p>
+          </div>
+
+          <div class="request-list" *ngIf="data.recentReceivedInterests.length">
+            <div class="request-row" *ngFor="let item of data.recentReceivedInterests | slice:0:4">
+
+              <div class="avatar">{{ item.user?.name?.charAt(0) }}</div>
+
+              <div class="row-main">
+                <span class="row-name">{{ item.user?.name }}</span>
+                <div class="row-meta">
+                  {{ item.post?.origin || 'from' }} → {{ item.post?.destination || 'to' }}
+                </div>
+              </div>
+
+              <div class="row-end">
+                <span class="chip time">{{ item.createdAt | date:'shortDate' }}</span>
+                <span
+                  class="status-badge"
+                  [class.pending]="item.status === 'PENDING'"
+                  [class.accepted]="item.status === 'ACCEPTED'"
+                  [class.rejected]="item.status === 'REJECTED'">
+                  {{ item.status }}
+                </span>
+              </div>
+
+            </div>
+          </div>
+        </mat-card>
+
+      </section>
+    </div>
+
+    <!-- NOTIFICATIONS SIDEBAR -->
+    <aside class="notifications-sidebar">
+      <mat-card class="notif-card">
+
+        <div class="notif-header">
+          <h2>
+            Notifications
+            <span class="notif-badge" *ngIf="unreadCount > 0">{{ unreadCount }}</span>
+          </h2>
+          <a class="mark-all" *ngIf="unreadCount > 0" (click)="markAllAsRead()">Mark all as read</a>
+        </div>
+
+        <div *ngIf="notificationsLoading" class="empty-state small">
+          <p>Loading...</p>
+        </div>
+
+        <div *ngIf="notificationsError" class="empty-state small">
+          <p>{{ notificationsError }}</p>
+        </div>
+
+        <div *ngIf="!notificationsLoading && !notifications.length" class="empty-state small">
+          <mat-icon>notifications_none</mat-icon>
+          <p>You're all caught up.</p>
+        </div>
+
+        <div class="notif-list" *ngIf="!notificationsLoading && notifications.length">
+          <div
+            class="notif-row"
+            [ngClass]="'color-' + colorFor(notification.type)"
+            *ngFor="let notification of notifications | slice:0:6"
+            (click)="markAsRead(notification)">
+
+            <span class="unread-dot" *ngIf="!notification.isRead"></span>
+
+            <div class="notif-icon">
+              <mat-icon>{{ iconFor(notification.type) }}</mat-icon>
+            </div>
+
+            <div class="notif-body">
+              <p class="notif-message">{{ notification.message }}</p>
+              <span class="notif-time">{{ timeAgo(notification.createdAt) }}</span>
+
+              <div class="notif-actions" *ngIf="showActionButtons(notification)">
+                <button
+                  class="btn-accept"
+                  [disabled]="actionInProgress[notification.id]"
+                  (click)="respondToInterest(notification, 'ACCEPTED', $event)">
+                  Accept
+                </button>
+                <button
+                  class="btn-reject"
+                  [disabled]="actionInProgress[notification.id]"
+                  (click)="respondToInterest(notification, 'REJECTED', $event)">
+                  Reject
+                </button>
+              </div>
+
+              <span class="notif-resolved" *ngIf="actionedIds.has(notification.id)">
+                Responded ✓
               </span>
             </div>
 
+            <button class="notif-delete" (click)="deleteNotification(notification, $event)" aria-label="Delete">
+              ✕
+            </button>
           </div>
         </div>
-      </mat-card>
 
-    </section>
+        <a class="view-all-notif" *ngIf="notifications.length">View all notifications →</a>
+
+      </mat-card>
+    </aside>
 
   </div>
 </ng-container>

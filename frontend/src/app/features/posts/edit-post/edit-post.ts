@@ -3,11 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
-import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 import { PostsService } from '../../../core/services/postservice';
 import { Post } from '../../../core/models/post';
@@ -19,11 +16,8 @@ import { Post } from '../../../core/models/post';
     CommonModule,
     FormsModule,
     MatDialogModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatSelectModule,
-    MatButtonModule,
     MatIconModule,
+    MatSnackBarModule,
   ],
   templateUrl: './edit-post.html',
   styleUrl: './edit-post.scss',
@@ -33,21 +27,50 @@ export class EditPost {
   private postsService = inject(PostsService);
   private dialogRef = inject(MatDialogRef<EditPost>);
   private data: Post = inject(MAT_DIALOG_DATA);
+  private snackBar = inject(MatSnackBar);
 
   origin = this.data.origin;
   destination = this.data.destination;
 
-  // Prisma stores a full DateTime; the <input type="date"> control
-  // only wants the yyyy-MM-dd portion.
   travelDate = this.formatDateForInput(this.data.travelDate);
 
-  travelTime = this.data.travelTime;
+  // Split the stored travelTime (e.g. "10 30 AM", "14:02", "09:00 AM")
+  // into a plain hh:mm text field + a separate AM/PM dropdown.
+  travelTimeText = '';
+  travelPeriod: 'AM' | 'PM' = 'AM';
+
   availableSeats = this.data.availableSeats;
   notes = this.data.notes ?? '';
   status = this.data.status;
 
   saving = false;
   errorMessage = '';
+
+  constructor() {
+    const parsed = this.parseTravelTime(this.data.travelTime);
+    this.travelTimeText = parsed.time;
+    this.travelPeriod = parsed.period;
+  }
+
+  private parseTravelTime(value: string): { time: string; period: 'AM' | 'PM' } {
+    if (!value) {
+      return { time: '', period: 'AM' };
+    }
+
+    const upper = value.toUpperCase();
+    const period: 'AM' | 'PM' = upper.includes('PM') ? 'PM' : 'AM';
+
+    // Pull out just the digits for hours/minutes, ignoring spaces/colons/AM/PM.
+    const digits = value.replace(/[^0-9]/g, '');
+
+    if (digits.length >= 3) {
+      const hh = digits.slice(0, digits.length - 2).padStart(2, '0');
+      const mm = digits.slice(-2);
+      return { time: `${hh}:${mm}`, period };
+    }
+
+    return { time: value.replace(/AM|PM/i, '').trim(), period };
+  }
 
   private formatDateForInput(value: string | Date): string {
     const d = new Date(value);
@@ -59,7 +82,7 @@ export class EditPost {
 
   save() {
 
-    if (!this.origin || !this.destination || !this.travelDate || !this.travelTime || !this.availableSeats) {
+    if (!this.origin || !this.destination || !this.travelDate || !this.travelTimeText || !this.availableSeats) {
       this.errorMessage = 'Please fill all required fields';
       return;
     }
@@ -71,19 +94,27 @@ export class EditPost {
       origin: this.origin,
       destination: this.destination,
       travelDate: this.travelDate,
-      travelTime: this.travelTime,
+      travelTime: `${this.travelTimeText} ${this.travelPeriod}`,
       availableSeats: this.availableSeats,
       notes: this.notes,
     }).subscribe({
 
       next: () => {
         this.saving = false;
+        this.snackBar.open('Changes saved successfully', 'Close', {
+          duration: 3000,
+          panelClass: ['toast-success'],
+        });
         this.dialogRef.close(true);
       },
 
       error: (err) => {
         this.saving = false;
         this.errorMessage = err.error?.message || 'Failed to update post';
+        this.snackBar.open('Changes could not be saved', 'Close', {
+          duration: 3500,
+          panelClass: ['toast-error'],
+        });
       }
 
     });

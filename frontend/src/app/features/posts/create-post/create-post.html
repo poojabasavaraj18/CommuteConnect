@@ -27,18 +27,17 @@
       Destination is required
     </small>
 
-    <label>Date</label>
-    <div class="input-wrap">
-      <mat-icon>calendar_today</mat-icon>
-      <input type="date" formControlName="travelDate" />
-    </div>
+<!-- Date -->
+<label>Date</label>
+<div class="input-wrap full-width">
+  <mat-icon>calendar_today</mat-icon>
+  <input type="date" formControlName="travelDate" />
+</div>
 
-    <label>Time</label>
-    <div class="input-wrap">
-      <mat-icon>schedule</mat-icon>
-      <input type="time" formControlName="travelTime" />
-    </div>
+<!-- Seats + Time -->
+<div class="double-fields">
 
+  <div class="field">
     <label>Seats Available</label>
     <div class="input-wrap">
       <mat-icon>person</mat-icon>
@@ -49,6 +48,17 @@
         <option [ngValue]="4">4</option>
       </select>
     </div>
+  </div>
+
+  <div class="field">
+    <label>Time</label>
+    <div class="input-wrap">
+      <mat-icon>schedule</mat-icon>
+      <input type="time" formControlName="travelTime" />
+    </div>
+  </div>
+
+</div>
 
   
 
