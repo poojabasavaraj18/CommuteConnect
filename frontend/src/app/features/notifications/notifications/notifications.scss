@@ -12,18 +12,21 @@
 
   h2 {
     margin: 0;
-    font-size: 1.25rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #111827;
   }
 }
 
 .mark-all-btn {
   background: none;
   border: none;
-  color: #2563eb;
-  font-size: 0.85rem;
+  color: #4b5563;
+  font-size: 0.8rem;
   cursor: pointer;
 
   &:hover {
+    color: #111827;
     text-decoration: underline;
   }
 }
@@ -50,31 +53,43 @@
   justify-content: space-between;
   padding: 0.9rem 1rem;
   border-radius: 10px;
-  background: #f9fafb;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
   cursor: pointer;
-  transition: background 0.15s ease;
+  transition: border-color 0.15s ease, background 0.15s ease;
 
   &:hover {
-    background: #f3f4f6;
+    border-color: #d1d5db;
+    background: #fafafa;
   }
 
   &.unread {
-    background: #eff6ff;
-    border-left: 3px solid #2563eb;
+    background: #fafafa;
+    border-color: #e5e7eb;
   }
 }
 
 .notification-content {
   display: flex;
   align-items: flex-start;
-  gap: 0.6rem;
+  gap: 0.5rem;
   flex: 1;
   min-width: 0;
 }
 
+.notification-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #2563eb;
+  margin-top: 0.45rem;
+  flex-shrink: 0;
+}
+
 .notification-icon {
-  font-size: 0.9rem;
+  font-size: 0.75rem;
   line-height: 1.4;
+  filter: grayscale(1) opacity(0.55);
 }
 
 .notification-text {
@@ -86,7 +101,7 @@
 .notification-message {
   margin: 0;
   font-size: 0.9rem;
-  color: #111827;
+  color: #1f2937;
   word-break: break-word;
 }
 
@@ -100,13 +115,13 @@
   background: none;
   border: none;
   color: #9ca3af;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   cursor: pointer;
   padding: 0.25rem 0.4rem;
   flex-shrink: 0;
 
   &:hover {
-    color: #dc2626;
+    color: #6b7280;
   }
 }
 
@@ -118,34 +133,36 @@
 
 .accept-btn,
 .reject-btn {
-  border: none;
   border-radius: 6px;
   padding: 5px 14px;
   font-size: 0.8rem;
   cursor: pointer;
   font-weight: 500;
+  background: #fff;
 
   &:disabled {
-    opacity: 0.6;
+    opacity: 0.5;
     cursor: not-allowed;
   }
 }
 
 .accept-btn {
-  background: #16a34a;
-  color: white;
+  border: 1px solid #111827;
+  color: #111827;
 
   &:hover:not(:disabled) {
-    background: #15803d;
+    background: #111827;
+    color: #fff;
   }
 }
 
 .reject-btn {
-  background: #fee2e2;
-  color: #dc2626;
+  border: 1px solid #d1d5db;
+  color: #6b7280;
 
   &:hover:not(:disabled) {
-    background: #fecaca;
+    border-color: #9ca3af;
+    color: #374151;
   }
 }
 
@@ -153,6 +170,6 @@
   display: inline-block;
   margin-top: 6px;
   font-size: 0.75rem;
-  color: #16a34a;
+  color: #6b7280;
   font-weight: 500;
 }

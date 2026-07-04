@@ -71,7 +71,7 @@
         <mat-card class="content-card">
           <div class="card-header">
             <h2>My Recent Posts</h2>
-            <a class="view-all">View all</a>
+            
           </div>
 
           <div *ngIf="!data.recentPosts.length" class="empty-state">
@@ -112,7 +112,7 @@
         <mat-card class="content-card">
           <div class="card-header">
             <h2>Recent Interests Received</h2>
-            <a class="view-all">View all</a>
+          
           </div>
 
           <div *ngIf="!data.recentReceivedInterests.length" class="empty-state">
@@ -159,7 +159,7 @@
             Notifications
             <span class="notif-badge" *ngIf="unreadCount > 0">{{ unreadCount }}</span>
           </h2>
-          <a class="mark-all" *ngIf="unreadCount > 0" (click)="markAllAsRead()">Mark all as read</a>
+          <!-- <a class="mark-all" *ngIf="unreadCount > 0" (click)="markAllAsRead()">Mark all as read</a> -->
         </div>
 
         <div *ngIf="notificationsLoading" class="empty-state small">
@@ -218,7 +218,7 @@
           </div>
         </div>
 
-        <a class="view-all-notif" *ngIf="notifications.length">View all notifications →</a>
+        <!-- <a class="view-all-notif" *ngIf="notifications.length">View all notifications →</a> -->
 
       </mat-card>
     </aside>

@@ -54,7 +54,9 @@ export class PostFeed implements OnInit {
 
   posts: Post[] = [];
   selectedTab: 'feed' | 'myPosts' = 'feed';
+  // interestedPostIds = new Set<string>();
   interestedPostIds = new Set<string>();
+interestingPostIds = new Set<string>();   
   interestError = '';
 
   pagination!: Pagination;
@@ -130,23 +132,32 @@ createForm = this.fb.group({
     this.dialog.open(PostDetails, { width: '520px', data: post });
   }
 
-  expressInterest(post: Post): void {
-    this.interestError = '';
-    this.interestsService.expressInterest(post.id).subscribe({
-      next: () => {
-        this.interestedPostIds.add(post.id);
-        this.cdr.detectChanges();
-      },
-      error: (err) => {
-        if (err.status === 400) {
-          this.interestedPostIds.add(post.id);
-        } else {
-          this.interestError = err.error?.message || 'Could not express interest';
-        }
-        this.cdr.detectChanges();
-      },
-    });
+ expressInterest(post: Post): void {
+
+  if (this.interestedPostIds.has(post.id) || this.interestingPostIds.has(post.id)) {
+    return;
   }
+
+  this.interestError = '';
+  this.interestingPostIds.add(post.id);
+
+  this.interestsService.expressInterest(post.id).subscribe({
+    next: () => {
+      this.interestingPostIds.delete(post.id);
+      this.interestedPostIds.add(post.id);
+      this.cdr.detectChanges();
+    },
+    error: (err) => {
+      this.interestingPostIds.delete(post.id);
+      if (err.status === 400) {
+        this.interestedPostIds.add(post.id);
+      } else {
+        this.interestError = err.error?.message || 'Could not express interest';
+      }
+      this.cdr.detectChanges();
+    },
+  });
+}
 
 submitCreate(): void {
 
@@ -171,35 +182,37 @@ submitCreate(): void {
   };
 
   this.postsService.createPost(payload).subscribe({
-    next: () => {
+  next: (createdPost: any) => {
 
-      this.creating = false;
+    this.creating = false;
 
-      this.createForm.reset({
-        origin: '',
-        destination: '',
-        travelDate: '',
-        travelTime: '',
-period: 'AM',
-        availableSeats: 1,
-        
-        notes: '',
-      });
+    this.createForm.reset({
+      origin: '',
+      destination: '',
+      travelDate: '',
+      travelTime: '',
+      period: 'AM',
+      availableSeats: 1,
+      notes: '',
+    });
 
-      this.page = 1;
-      this.loadPosts();
+    // Show the new ride right away rather than relying on the
+    // backend's sort/pagination to surface it on page 1.
+    const newPost: Post = createdPost?.data ?? createdPost;
+    this.page = 1;
+    this.posts = [newPost, ...this.posts].slice(0, this.limit);
+    this.cdr.detectChanges();
 
-    },
+    // Still resync with the server in the background so pagination
+    // totals stay correct.
+    this.loadPosts();
+  },
 
-    error: (err) => {
-
-      this.creating = false;
-
-      console.error(err);
-
-    }
-
-  });
+  error: (err) => {
+    this.creating = false;
+    console.error(err);
+  }
+});
 
 }
 search(): void {

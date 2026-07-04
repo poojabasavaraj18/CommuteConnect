@@ -1,6 +1,6 @@
 <div class="notifications-page">
   <div class="notifications-header">
-    <h2>🔔 Notifications</h2>
+    <h2>Notifications</h2>
     <button
       *ngIf="unreadCount > 0"
       class="mark-all-btn"
@@ -25,6 +25,7 @@
       (click)="markAsRead(notification)"
     >
       <div class="notification-content">
+        <span class="notification-dot" *ngIf="!notification.isRead"></span>
         <span class="notification-icon">{{ iconFor(notification.type) }}</span>
         <div class="notification-text">
           <p class="notification-message">{{ notification.message }}</p>
@@ -51,7 +52,7 @@
             class="resolved-tag"
             *ngIf="actionedIds.has(notification.id)"
           >
-            Responded ✓
+            Responded
           </span>
         </div>
       </div>

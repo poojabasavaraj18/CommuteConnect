@@ -3,7 +3,7 @@
   display: block;
   background: #f6f8fb;
   height: 100vh;
-  overflow: hidden;
+  overflow: auto;
 }
 
 .loading-container {
@@ -23,19 +23,19 @@ $navbar-height: 72px;
 .dashboard-layout {
   height: calc(100vh - #{$navbar-height});
   max-height: calc(100vh - #{$navbar-height});
-  padding: 20px 32px;
+  padding: 24px 32px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: 2.2fr 1fr;
-  gap: 20px;
-  overflow: hidden;
+  grid-template-columns: 1fr 350px;
+  gap: 24px;
+  overflow: visible;
   box-sizing: border-box;
 }
 
 .main-content {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 18px;
   min-height: 0;
   height: 100%;
   overflow: hidden;
@@ -47,15 +47,15 @@ $navbar-height: 72px;
 }
 
 .greeting {
-  font-size: 22px;
-  font-weight: 700;
+  font-size: 24px;
+  font-weight: 500;
   color: #0f172a;
   margin: 0;
   letter-spacing: -0.02em;
 }
 
 .subtitle {
-  margin: 4px 0 0;
+  margin: 6px 0 0;
   color: #64748b;
   font-size: 13px;
   font-weight: 400;
@@ -66,16 +66,16 @@ $navbar-height: 72px;
   flex: 0 0 auto;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 14px;
+  gap: 16px;
 }
 
 .stat-card {
   padding: 0 !important;
   border-radius: 12px !important;
   border: 1px solid #eef2f7 !important;
-  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 4px 12px rgba(15, 23, 42, 0.04) !important;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05), 0 2px 8px rgba(15, 23, 42, 0.03) !important;
   background: #ffffff !important;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: all 0.2s ease;
   cursor: pointer;
   overflow: hidden;
 
@@ -88,20 +88,20 @@ $navbar-height: 72px;
 
 .stat-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08) !important;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08) !important;
 }
 
 .stat-inner {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 14px 16px;
+  gap: 14px;
+  padding: 16px;
   width: 100%;
 }
 
 .icon-circle {
-  width: 38px;
-  height: 38px;
+  width: 40px;
+  height: 40px;
   border-radius: 10px;
   display: flex;
   align-items: center;
@@ -109,9 +109,9 @@ $navbar-height: 72px;
   flex-shrink: 0;
 
   mat-icon {
-    font-size: 19px;
-    width: 19px;
-    height: 19px;
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
   }
 
   &.small {
@@ -141,15 +141,15 @@ $navbar-height: 72px;
 
 .stat-text h2 {
   margin: 0;
-  font-size: 19px;
+  font-size: 20px;
   font-weight: 700;
   color: #0f172a;
-  line-height: 1.15;
+  line-height: 1.2;
   letter-spacing: -0.02em;
 }
 
 .stat-text span {
-  font-size: 11.5px;
+  font-size: 12px;
   font-weight: 600;
   color: #475569;
   margin-top: 2px;
@@ -157,7 +157,7 @@ $navbar-height: 72px;
 }
 
 .stat-text small {
-  font-size: 9.5px;
+  font-size: 9px;
   color: #94a3b8;
   margin-top: 1px;
   text-transform: uppercase;
@@ -171,20 +171,23 @@ $navbar-height: 72px;
   min-height: 0;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 18px;
+  align-items: start;   // ADD THIS
+  gap: 20px;
   overflow: hidden;
 }
+
+
 
 .content-card {
   display: flex;
   flex-direction: column;
   min-height: 0;
-  height: 100%;
-  padding: 16px !important;
+  height: 95%;
+  padding: 18px !important;
   border-radius: 12px !important;
   background: #ffffff !important;
   border: 1px solid #eef2f7 !important;
-  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 4px 12px rgba(15, 23, 42, 0.04) !important;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05), 0 2px 8px rgba(15, 23, 42, 0.03) !important;
   overflow: hidden;
 }
 
@@ -193,15 +196,15 @@ $navbar-height: 72px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 10px;
-  padding-bottom: 10px;
+  margin-bottom: 12px;
+  padding-bottom: 12px;
   border-bottom: 1px solid #f1f5f9;
 }
 
 .card-header h2 {
   margin: 0;
   color: #0f172a;
-  font-size: 14.5px;
+  font-size: 15px;
   font-weight: 700;
   letter-spacing: -0.01em;
 }
@@ -212,8 +215,12 @@ $navbar-height: 72px;
   font-weight: 600;
   text-decoration: none;
   cursor: pointer;
+  transition: color 0.2s ease;
 
-  &:hover { text-decoration: underline; }
+  &:hover { 
+    color: #1d4ed8;
+    text-decoration: underline; 
+  }
 }
 
 .empty-state {
@@ -223,16 +230,16 @@ $navbar-height: 72px;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 12px;
+  padding: 20px;
   color: #94a3b8;
   text-align: center;
 
   mat-icon {
-    font-size: 34px;
-    width: 34px;
-    height: 34px;
-    margin-bottom: 8px;
-    opacity: 0.6;
+    font-size: 36px;
+    width: 36px;
+    height: 36px;
+    margin-bottom: 12px;
+    opacity: 0.5;
   }
 
   p {
@@ -258,12 +265,9 @@ $navbar-height: 72px;
 
 .post-list,
 .request-list {
-  flex: 1;
-  min-height: 0;
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  overflow: hidden; // clip instead of scroll, per requirement
+  gap: 6px;
 }
 
 .post-row,
@@ -271,12 +275,13 @@ $navbar-height: 72px;
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 9px 8px;
-  border-radius: 9px;
-  transition: background 0.2s ease;
+  padding: 11px 10px;
+  border-radius: 8px;
+  transition: background 0.15s ease;
   cursor: pointer;
-  flex: 1 1 0;
   min-height: 0;
+  overflow: visible;
+     // NEW — clips gracefully inside its own row instead of bleeding into the next
 
   &:hover { background: #f8fafc; }
 }
@@ -293,12 +298,16 @@ $navbar-height: 72px;
   font-weight: 600;
   font-size: 13px;
   color: #0f172a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 
   .arrow {
     color: #cbd5e1;
     font-size: 15px;
     width: 15px;
     height: 15px;
+    flex-shrink: 0;
   }
 }
 
@@ -307,18 +316,24 @@ $navbar-height: 72px;
   font-weight: 600;
   color: #0f172a;
   display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .row-meta {
   font-size: 11px;
   color: #94a3b8;
-  margin-top: 2px;
+  margin-top: 3px;
   font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .avatar {
-  width: 34px;
-  height: 34px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%);
   color: #4f46e5;
@@ -335,7 +350,7 @@ $navbar-height: 72px;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 4px;
+  gap: 3px;
   flex-shrink: 0;
 }
 
@@ -346,7 +361,7 @@ $navbar-height: 72px;
 }
 
 .status-badge {
-  padding: 3px 9px;
+  padding: 4px 10px;
   border-radius: 999px;
   font-size: 10px;
   font-weight: 600;
@@ -368,6 +383,8 @@ $navbar-height: 72px;
   height: 100%;
   min-height: 0;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .notif-card {
@@ -375,11 +392,11 @@ $navbar-height: 72px;
   min-height: 0;
   display: flex;
   flex-direction: column;
-  padding: 18px !important;
+  padding: 20px !important;
   border-radius: 12px !important;
   background: #ffffff !important;
   border: 1px solid #eef2f7 !important;
-  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 4px 12px rgba(15, 23, 42, 0.04) !important;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05), 0 2px 8px rgba(15, 23, 42, 0.03) !important;
   overflow: hidden;
 }
 
@@ -388,7 +405,9 @@ $navbar-height: 72px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 12px;
+  margin-bottom: 16px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #f1f5f9;
 
   h2 {
     margin: 0;
@@ -398,6 +417,7 @@ $navbar-height: 72px;
     display: flex;
     align-items: center;
     gap: 8px;
+    letter-spacing: -0.01em;
   }
 }
 
@@ -406,22 +426,26 @@ $navbar-height: 72px;
   color: #fff;
   font-size: 11px;
   font-weight: 700;
-  min-width: 18px;
-  height: 18px;
+  min-width: 20px;
+  height: 20px;
   border-radius: 999px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0 5px;
+  padding: 0 6px;
 }
 
 .mark-all {
   color: #2563eb;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
   cursor: pointer;
+  transition: color 0.2s ease;
 
-  &:hover { text-decoration: underline; }
+  &:hover { 
+    color: #1d4ed8;
+    text-decoration: underline; 
+  }
 }
 
 .notif-list {
@@ -430,53 +454,77 @@ $navbar-height: 72px;
   display: flex;
   flex-direction: column;
   gap: 8px;
-  overflow: hidden; // clip, never scroll
-}
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 6px;
+  padding-bottom: 4px;
 
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 3px;
+
+    &:hover {
+      background: #94a3b8;
+    }
+  }
+}
 .notif-row {
   position: relative;
   display: flex;
   align-items: flex-start;
-  gap: 12px;
+  gap: 10px;
   padding: 12px;
-  border-radius: 12px;
+  border-radius: 10px;
   cursor: pointer;
-  transition: background 0.2s ease;
-  flex: 1 1 0;
+  transition: all 0.2s ease;
+  flex: 0 0 auto;
   min-height: 0;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
 
-  &.color-blue   { background: #eff6ff; }
-  &.color-green  { background: #ecfdf5; }
-  &.color-orange { background: #fff7ed; }
-  &.color-red    { background: #fef2f2; }
-
-  &:hover .notif-delete { opacity: 1; }
+  &:hover { 
+    background: #f1f5f9;
+    transform: translateX(2px);
+    
+    .notif-delete { 
+      opacity: 1; 
+    }
+  }
 }
 
 .unread-dot {
   position: absolute;
-  top: 10px;
-  left: 4px;
-  width: 8px;
-  height: 8px;
+  top: 11px;
+  left: 6px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
-  background: #22c55e;
+  background: #ef4444;
+  flex-shrink: 0;
 }
 
 .notif-icon {
-  width: 34px;
-  height: 34px;
-  border-radius: 9px;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  background: rgba(255, 255, 255, 0.75);
+  background: rgba(255, 255, 255, 0.8);
 
   mat-icon {
-    font-size: 17px;
-    width: 17px;
-    height: 17px;
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
   }
 }
 
@@ -488,25 +536,29 @@ $navbar-height: 72px;
 .notif-body {
   flex: 1;
   min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .notif-message {
   margin: 0;
-  font-size: 12.5px;
+  font-size: 12px;
   font-weight: 600;
   color: #0f172a;
-  line-height: 1.35;
+  line-height: 1.4;
+  word-wrap: break-word;
 }
 
 .notif-time {
-  font-size: 10.5px;
+  font-size: 10px;
   color: #94a3b8;
   font-weight: 500;
 }
 
 .notif-actions {
   display: flex;
-  gap: 8px;
+  gap: 6px;
   margin-top: 6px;
 }
 
@@ -514,30 +566,42 @@ $navbar-height: 72px;
 .btn-reject {
   border: none;
   border-radius: 6px;
-  padding: 3px 11px;
-  font-size: 10.5px;
+  padding: 4px 10px;
+  font-size: 10px;
   font-weight: 600;
   cursor: pointer;
+  transition: all 0.15s ease;
 
-  &:disabled { opacity: 0.6; cursor: not-allowed; }
+  &:disabled { 
+    opacity: 0.5; 
+    cursor: not-allowed; 
+  }
 }
 
 .btn-accept {
   background: #16a34a;
   color: #fff;
-  &:hover:not(:disabled) { background: #15803d; }
+  
+  &:hover:not(:disabled) { 
+    background: #15803d;
+    transform: translateY(-1px);
+  }
 }
 
 .btn-reject {
   background: #fee2e2;
   color: #dc2626;
-  &:hover:not(:disabled) { background: #fecaca; }
+  
+  &:hover:not(:disabled) { 
+    background: #fecaca;
+    transform: translateY(-1px);
+  }
 }
 
 .notif-resolved {
   display: inline-block;
-  margin-top: 5px;
-  font-size: 10.5px;
+  margin-top: 4px;
+  font-size: 10px;
   color: #16a34a;
   font-weight: 600;
 }
@@ -545,25 +609,43 @@ $navbar-height: 72px;
 .notif-delete {
   background: none;
   border: none;
-  color: #94a3b8;
-  font-size: 12px;
+  color: #cbd5e1;
+  font-size: 16px;
   cursor: pointer;
   opacity: 0;
-  transition: opacity 0.2s ease;
+  transition: all 0.2s ease;
   flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
 
-  &:hover { color: #dc2626; }
+  &:hover { 
+    color: #dc2626;
+    background: #fee2e2;
+    border-radius: 6px;
+  }
 }
 
 .view-all-notif {
   flex: 0 0 auto;
   display: block;
   text-align: center;
-  margin-top: 10px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #f1f5f9;
   font-size: 12px;
   font-weight: 600;
   color: #2563eb;
   cursor: pointer;
+  transition: color 0.2s ease;
 
-  &:hover { text-decoration: underline; }
+  &:hover { 
+    color: #1d4ed8;
+    text-decoration: underline; 
+  }
 }
+
+

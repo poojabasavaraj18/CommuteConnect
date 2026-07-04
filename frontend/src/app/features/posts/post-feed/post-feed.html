@@ -169,11 +169,17 @@
                       View Details
                     </button>
                     <button mat-flat-button class="btn-primary"
-                            [disabled]="interestedPostIds.has(post.id)"
-                            (click)="expressInterest(post)">
-                      <mat-icon>favorite_border</mat-icon>
-                      Interested
-                    </button>
+        [disabled]="interestedPostIds.has(post.id) || interestingPostIds.has(post.id)"
+        (click)="expressInterest(post)">
+
+  <mat-spinner *ngIf="interestingPostIds.has(post.id)" diameter="16" class="btn-spinner"></mat-spinner>
+
+  <mat-icon *ngIf="!interestingPostIds.has(post.id) && !interestedPostIds.has(post.id)">favorite_border</mat-icon>
+  <mat-icon *ngIf="interestedPostIds.has(post.id)">favorite</mat-icon>
+
+  {{ interestingPostIds.has(post.id) ? 'Sending...' : (interestedPostIds.has(post.id) ? 'Interested' : 'Show Interest') }}
+
+</button>
                   </div>
 
                 </mat-card>

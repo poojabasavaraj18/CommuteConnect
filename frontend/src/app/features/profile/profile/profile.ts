@@ -2,29 +2,29 @@ import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-import { MatCardModule } from '@angular/material/card';
-import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { UsersService } from '../../../core/services/profile.service';
-
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-profile',
   standalone: true,
   imports: [
     CommonModule,
     FormsModule,
-    MatCardModule,
-    MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
     MatIconModule,
+    MatProgressSpinnerModule,
   ],
   templateUrl: './profile.html',
   styleUrl: './profile.scss',
 })
+
+
 export class Profile implements OnInit {
 
   private usersService = inject(UsersService);
@@ -46,6 +46,12 @@ export class Profile implements OnInit {
   ngOnInit(): void {
     this.loadProfile();
   }
+
+private router = inject(Router);
+
+close(): void {
+  this.router.navigate(['/dashboard']);
+}
 
   loadProfile() {
 
@@ -134,3 +140,11 @@ export class Profile implements OnInit {
   }
 
 }
+// import { Router } from '@angular/router';
+
+// // inside the class:
+// private router = inject(Router);
+
+// close(): void {
+//   this.router.navigate(['/dashboard']);
+// }

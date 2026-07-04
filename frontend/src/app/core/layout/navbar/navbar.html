@@ -1,59 +1,4 @@
-<!-- <mat-toolbar class="navbar">
 
-    <div class="logo" routerLink="/dashboard">
-        <mat-icon>directions_car</mat-icon>
-        <span>CommuteConnect</span>
-    </div>
-
-    <div class="menu">
-
-        <a routerLink="/dashboard" routerLinkActive="active">
-            Dashboard
-        </a>
-
-        <a routerLink="/posts" routerLinkActive="active">
-            Posts
-        </a>
-
-        <a routerLink="/my-posts" routerLinkActive="active">
-            My Rides
-        </a>
-
-        <a routerLink="/interests" routerLinkActive="active">
-            Interests
-        </a>
-
-        <a routerLink="/profile" routerLinkActive="active">
-            Profile
-        </a>
-
-    </div>
-
-    <div class="actions">
-
-        <button
-            mat-icon-button
-            class="bell-btn"
-            (click)="goToNotifications()"
-            [matBadge]="unreadCount"
-            [matBadgeHidden]="unreadCount === 0"
-            matBadgeColor="warn"
-            matBadgeSize="small"
-            aria-label="Notifications">
-            <mat-icon>notifications</mat-icon>
-        </button>
-
-        <button
-            mat-flat-button
-            color="primary"
-            class="logout-btn"
-            (click)="logout()">
-            Logout
-        </button>
-
-    </div>
-
-</mat-toolbar> -->
 <mat-toolbar class="navbar">
 
     <div class="logo" routerLink="/dashboard">
@@ -73,10 +18,7 @@
             <span>All Rides</span>
         </a>
 
-        <a routerLink="/my-posts" routerLinkActive="active">
-            <mat-icon>list_alt</mat-icon>
-            <span>My Rides</span>
-        </a>
+        
 
         <a routerLink="/interests" routerLinkActive="active">
             <mat-icon>favorite</mat-icon>
@@ -88,17 +30,7 @@
             <span>Profile</span>
         </a>
 
-        <a routerLink="/notifications" routerLinkActive="active">
-            <mat-icon
-                [matBadge]="unreadCount"
-                [matBadgeHidden]="unreadCount === 0"
-                matBadgeColor="warn"
-                matBadgeSize="small">
-                notifications
-            </mat-icon>
-            <span>Notifications</span>
-        </a>
-
+    
     </div>
 
     <div class="actions">

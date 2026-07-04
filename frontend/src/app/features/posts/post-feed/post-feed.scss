@@ -41,7 +41,7 @@
 
 /* ==================== HEADER ==================== */
 .page-header { flex-shrink: 0; margin-bottom: 6px; }
-.titles h1 { margin: 0; font-size: 22px; font-weight: 800; color: #0f172a; letter-spacing: -0.02em; }
+.titles h1 { margin: 0; font-size: 22px; font-weight: 500; color: #0f172a; letter-spacing: -0.02em; }
 .subtitle { margin: 2px 0 0; color: #64748b; font-size: 12px; max-width: 560px; line-height: 1.4; }
 
 /* ==================== TABS ==================== */
@@ -420,4 +420,12 @@
   .posts-grid     { grid-template-columns: 1fr; }
   .actions        { flex-direction: column; }
   .actions button { width: 100%; }
+}
+.btn-spinner {
+  display: inline-block;
+  margin-right: 6px;
+
+  ::ng-deep circle {
+    stroke: currentColor;
+  }
 }

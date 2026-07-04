@@ -1,22 +1,33 @@
 <div class="profile-page">
 
   <div class="loading" *ngIf="loading">
+    <mat-spinner diameter="32"></mat-spinner>
     <p>Loading profile…</p>
   </div>
 
   <div class="profile-content" *ngIf="!loading && profile">
 
-    <mat-card class="profile-card">
+    <div class="profile-card">
 
-      <div class="avatar-block">
+      <button class="close-btn" (click)="close()" aria-label="Close">
+        <mat-icon>close</mat-icon>
+      </button>
+
+      <div class="card-header">
         <div class="avatar">{{ getInitials(profile.name) }}</div>
+        <div class="identity">
+          <h1>{{ profile.name }}</h1>
+          <span class="email">{{ profile.email }}</span>
+        </div>
       </div>
 
-      <div class="success" *ngIf="successMessage">
+      <div class="banner success" *ngIf="successMessage">
+        <mat-icon>check_circle</mat-icon>
         {{ successMessage }}
       </div>
 
-      <div class="error" *ngIf="errorMessage">
+      <div class="banner error" *ngIf="errorMessage">
+        <mat-icon>error_outline</mat-icon>
         {{ errorMessage }}
       </div>
 
@@ -39,12 +50,10 @@
         </div>
 
         <div class="actions">
-
-          <button mat-stroked-button color="primary" (click)="startEditing()">
+          <button class="btn btn-outline" (click)="startEditing()">
             <mat-icon>edit</mat-icon>
             Edit Profile
           </button>
-
         </div>
 
       </ng-container>
@@ -52,31 +61,32 @@
       <!-- EDIT MODE -->
       <ng-container *ngIf="editing">
 
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Name</mat-label>
-          <input matInput [(ngModel)]="name">
-        </mat-form-field>
+        <div class="edit-fields">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Name</mat-label>
+            <input matInput [(ngModel)]="name">
+          </mat-form-field>
 
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Email</mat-label>
-          <input matInput type="email" [(ngModel)]="email">
-        </mat-form-field>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Email</mat-label>
+            <input matInput type="email" [(ngModel)]="email">
+          </mat-form-field>
+        </div>
 
         <div class="actions">
-
-          <button mat-stroked-button (click)="cancelEditing()" [disabled]="saving">
+          <button class="btn btn-ghost" (click)="cancelEditing()" [disabled]="saving">
             Cancel
           </button>
 
-          <button mat-raised-button color="primary" (click)="saveProfile()" [disabled]="saving">
+          <button class="btn btn-primary" (click)="saveProfile()" [disabled]="saving">
+            <mat-spinner *ngIf="saving" diameter="16" class="btn-spinner"></mat-spinner>
             {{ saving ? 'Saving…' : 'Save Changes' }}
           </button>
-
         </div>
 
       </ng-container>
 
-    </mat-card>
+    </div>
 
   </div>
 
