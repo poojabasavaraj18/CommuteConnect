@@ -34,9 +34,9 @@ export class InterestsService {
       where: { userId_postId: { userId, postId } },
     });
 
-    if (existingInterest) {
-      throw new BadRequestException('Interest already exists');
-    }
+    // if (existingInterest) {
+    //   throw new BadRequestException('Interest already exists');
+    // }
 
     const interest = await this.prisma.interest.create({
       data: { userId, postId },
