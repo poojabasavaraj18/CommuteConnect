@@ -1,59 +1,341 @@
-# Frontend
+# 🚗 CommuteConnect
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.0.5.
+A full-stack carpool coordination platform that enables commuters to create ride posts, discover rides, express interest, and manage ride requests through a modern and responsive web application.
 
-## Development server
+---
 
-To start a local development server, run:
+# 📖 Project Overview
+
+CommuteConnect is a full-stack web application built to simplify daily commuting by connecting users traveling along similar routes. The application provides secure authentication, ride management, interest tracking, and a personalized dashboard, offering a seamless experience for commuters.
+
+---
+
+# 🏗 Architecture Diagram
+
+```
+                 +---------------------------+
+                 |      Angular Frontend     |
+                 |        (Netlify)          |
+                 +------------+--------------+
+                              |
+                         REST API (HTTPS)
+                              |
+                              ▼
+                 +---------------------------+
+                 |      NestJS Backend       |
+                 |        (Render)           |
+                 +------------+--------------+
+                              |
+                          Prisma ORM
+                              |
+                              ▼
+                 +---------------------------+
+                 |    PostgreSQL Database    |
+                 |         (Neon)            |
+                 +---------------------------+
+```
+
+---
+
+# 🗄 Database Schema
+
+## User
+
+| Field | Type |
+|--------|------|
+| id | UUID |
+| name | String |
+| email | String (Unique) |
+| password | String (Hashed) |
+| isActive | Boolean |
+| createdAt | DateTime |
+
+---
+
+## Post
+
+| Field | Type |
+|--------|------|
+| id | UUID |
+| origin | String |
+| destination | String |
+| travelDate | Date |
+| travelTime | String |
+| availableSeats | Integer |
+| notes | Text |
+| status | ACTIVE / COMPLETED / CANCELLED |
+| ownerId | UUID |
+
+---
+
+## Interest
+
+| Field | Type |
+|--------|------|
+| id | UUID |
+| senderId | UUID |
+| receiverId | UUID |
+| postId | UUID |
+| status | PENDING / ACCEPTED / REJECTED |
+
+---
+
+# ✨ Features
+
+### Authentication
+
+- User Registration
+- Secure Login
+- JWT Authentication
+- Password Encryption using bcrypt
+
+### Dashboard
+
+- Personalized Dashboard
+- Ride Statistics
+- Recent Ride Posts
+- Recent Ride Interests
+
+### Ride Management
+
+- Create Ride
+- View All Available Rides
+- View My Posts
+- Update Ride Status
+- Seat Management
+
+### Interest Management
+
+- Send Ride Interest
+- Accept Requests
+- Reject Requests
+- View Sent Interests
+- View Received Interests
+
+### Profile
+
+- View Profile
+- Update Profile
+
+### Notifications
+
+- Interest Notifications
+- Request Status Updates
+
+
+# 💻 Tech Stack
+
+## Frontend
+
+- Angular
+- TypeScript
+- Angular Material
+- HTML5
+- SCSS
+- RxJS
+
+## Backend
+
+- NestJS
+- TypeScript
+- Prisma ORM
+- JWT
+- bcrypt
+
+## Database
+
+- PostgreSQL (Neon)
+
+## Deployment
+
+- Netlify
+- Render
+
+---
+
+# 📂 Folder Structure
+
+```
+CommuteConnect
+│
+├── backend
+│   ├── prisma
+│   ├── src
+│   │   ├── auth
+│   │   ├── common
+│   │   ├── dashboard
+│   │   ├── interests
+│   │   ├── notifications
+│   │   ├── posts
+│   │   ├── prisma
+│   │   ├── users
+│   │   ├── app.controller.ts
+│   │   ├── app.module.ts
+│   │   ├── app.service.ts
+│   │   └── main.ts
+│   ├── test
+│   ├── package.json
+│   └── prisma
+│
+├── frontend
+│   ├── public
+│   ├── src
+│   │   ├── app
+│   │   │   ├── core
+│   │   │   ├── features
+│   │   │   │   ├── auth
+│   │   │   │   ├── dashboard
+│   │   │   │   ├── interests
+│   │   │   │   ├── notifications
+│   │   │   │   ├── posts
+│   │   │   │   └── profile
+│   │   │   ├── app.config.ts
+│   │   │   ├── app.routes.ts
+│   │   │   └── main.ts
+│   │   ├── environments
+│   │   ├── index.html
+│   │   └── styles.scss
+│   ├── angular.json
+│   └── package.json
+│
+└── README.md
+```
+
+---
+
+# ⚙️ Setup Instructions
+
+## Clone Repository
 
 ```bash
+git clone https://github.com/poojabasavaraj18/CommuteConnect.git
+
+cd CommuteConnect
+```
+
+## Backend Setup
+
+```bash
+cd backend
+
+npm install
+
+npx prisma generate
+
+npx prisma migrate dev
+
+npm run start:dev
+```
+
+Backend runs at:
+
+```
+http://localhost:3000
+```
+
+---
+
+## Frontend Setup
+
+```bash
+cd frontend
+
+npm install
+
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Frontend runs at:
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
+```
+http://localhost:4200
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+---
 
-```bash
-ng generate --help
+# 🔐 Environment Variables
+
+## Backend (.env)
+
+```env
+DATABASE_URL="postgresql://neondb_owner:npg_Y4OcpDGv0asS@ep-icy-shape-adeu6b2a-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
+
+JWT_SECRET="CommuteConnect@2026#NestJS$JWT"
+
+FRONTEND_URL=http://localhost:4200
+
+PORT=3000
 ```
 
-## Building
+## Frontend
 
-To build the project run:
+Update the API URL inside the environment file.
 
-```bash
-ng build
+Development
+
+```ts
+apiUrl = "http://localhost:3000";
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+Production
 
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
+```ts
+apiUrl = "https://commuteconnect.onrender.com";
 ```
 
-## Running end-to-end tests
+---
 
-For end-to-end (e2e) testing, run:
+# 🌐 Deployment Links
 
-```bash
-ng e2e
-```
+## Frontend
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+https://commuteconnectt.netlify.app
 
-## Additional Resources
+## Backend
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+https://commuteconnect.onrender.com
+
+## GitHub Repository
+
+https://github.com/poojabasavaraj18/CommuteConnect.git
+
+---
+
+# ⚙️ Technical Decisions
+
+- Angular Standalone Components were used to simplify module management.
+- NestJS provides a scalable backend architecture with dependency injection.
+- Prisma ORM simplifies database operations and migrations.
+- PostgreSQL was selected for relational data management.
+- JWT Authentication secures all protected APIs.
+- Angular Material provides a modern and consistent UI.
+- REST APIs are used for communication between frontend and backend.
+- Netlify hosts the frontend while Render hosts the backend.
+
+---
+
+# ⚖️ Trade-offs
+
+- Real-time notifications were not implemented.
+- Google Maps integration was excluded to keep the project scope manageable.
+- In-app chat between commuters is not included.
+- Profile image upload is not supported.
+- Ride search currently uses basic filtering.
+
+---
+
+# 🚀 Future Implementations
+
+- Google Maps Integration
+- Live Ride Tracking
+- WebSocket-based Real-time Notifications
+- In-app Chat
+- Email Notifications
+- Ride Ratings & Reviews
+- Profile Picture Upload
+- Advanced Ride Search Filters
+- Admin Dashboard
+- Push Notifications
+- Dark Mode
+- Payment Integration
+- Ride Analytics Dashboard
