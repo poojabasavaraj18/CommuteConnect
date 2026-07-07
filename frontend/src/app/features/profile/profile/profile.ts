@@ -140,11 +140,3 @@ close(): void {
   }
 
 }
-// import { Router } from '@angular/router';
-
-// // inside the class:
-// private router = inject(Router);
-
-// close(): void {
-//   this.router.navigate(['/dashboard']);
-// }

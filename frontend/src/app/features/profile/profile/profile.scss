@@ -225,9 +225,6 @@
 }
 
 /* --------------------------------------------------------- edit-mode form --- */
-/* ===========================================================
-   EDIT PROFILE
-=========================================================== */
 
 .edit-fields {
   display: flex;
@@ -289,10 +286,6 @@
   font-weight: 400;
   margin: 0;
 }
-
-/* Since labels are now static (.input-group .label) instead of Material's
-   floating label, there's no mat-label in the template anymore — nothing
-   left to hide here. */
 
 /* Outline — soft on-theme border, matching the rest of the card */
 ::ng-deep .full-width .mdc-notched-outline__leading,

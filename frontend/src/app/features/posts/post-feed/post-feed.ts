@@ -69,8 +69,7 @@ interestingPostIds = new Set<string>();
   seats       = '';
   sortBy      = 'latest';
   page        = 1;
-  // Exactly 3 cards per page (one row) so every card can show full
-  // detail without being clipped, and the page never scrolls.
+  
   limit       = 3;
 
   creating = false;

@@ -34,8 +34,7 @@ export class EditPost {
 
   travelDate = this.formatDateForInput(this.data.travelDate);
 
-  // Split the stored travelTime (e.g. "10 30 AM", "14:02", "09:00 AM")
-  // into a plain hh:mm text field + a separate AM/PM dropdown.
+
   travelTimeText = '';
   travelPeriod: 'AM' | 'PM' = 'AM';
 

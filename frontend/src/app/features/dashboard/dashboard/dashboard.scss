@@ -1,4 +1,4 @@
-/* ============ LAYOUT — LOCKED, NO SCROLL ============ */
+
 :host {
   display: block;
   background: #f6f8fb;
@@ -41,7 +41,7 @@ $navbar-height: 72px;
   overflow: hidden;
 }
 
-/* ============ HEADER ============ */
+/
 .header-card {
   flex: 0 0 auto;
 }
@@ -61,7 +61,7 @@ $navbar-height: 72px;
   font-weight: 400;
 }
 
-/* ============ STATISTICS GRID — one row, smaller ============ */
+
 .stats-grid {
   flex: 0 0 auto;
   display: grid;
@@ -165,7 +165,7 @@ $navbar-height: 72px;
   font-weight: 600;
 }
 
-/* ============ ACTIVITY GRID — fills remaining space ============ */
+
 .activity-grid {
   flex: 1;
   min-height: 0;
